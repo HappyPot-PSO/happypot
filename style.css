@@ -1,0 +1,505 @@
+@import url('https://fonts.googleapis.com/css2?family=Montserrat:wght@500&display=swap');
+
+*{
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+    font-family: "Montserrat", sans-serif;
+}
+
+body{
+	background-color: #ccf1ff;
+}
+
+#wrapper {
+    margin-left: auto;
+    margin-right: auto;
+    width: 1450px;
+}
+
+
+
+/* Header */
+header{
+	height: 150px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding-left: 150px ;
+	padding-right: 150px;	
+	margin-top: 25px;
+	background: white;
+	border: solid;
+	border-radius: 50px 50px 0px 0px;
+	border-color: #cccccc;
+	border-bottom: none;
+}
+
+.logo{
+    height: 80px;
+    width: auto; 
+}
+
+.logotxt{
+	float: right;
+	margin-top: 15px;
+	padding-left: 10px;
+	color: #4dc9f7;
+	font-size: 55px;
+}
+
+
+
+/* Log-in*/
+.loginbox{
+    height:30px;
+	margin-top: 23px;
+	margin-right: 3px;
+	padding-left: 10px;
+	font-size: 14px;
+	border: solid 2px;
+	border-radius: 15px;
+	border-color: #cccccc;
+}
+
+.loginbtn{
+    height: 42px;
+	width: 130px;
+	margin-top: 23px;
+	font-size: 14px;
+	font-weight: bold;
+	background-color: #a3e6ff;
+	border: solid 2px;
+	border-radius: 15px;
+	border-color: #cccccc;
+}
+
+.btnhov:hover {
+	background-color: #4dc9f7;
+	cursor: pointer;
+}
+
+
+
+/* Log-out*/
+.logoutbtn{
+    height: 42px;
+	width: 130px;
+	margin-top: 23px;
+	font-size: 14px;
+	font-weight: bold;
+	background-color: #e7e6e6;;
+	border: solid 2px;
+	border-radius: 15px;
+	border-color: #cccccc;
+}
+
+.btnhovcl:hover {
+	background-color: #afafaf;
+	cursor: pointer;
+}
+
+
+
+/* Register - About Us */
+.aboutRegi{
+	display: flex;
+    justify-content: space-between;
+    align-items: stretch;
+	padding: 35px 215px 50px 150px;
+	border: solid;
+	border-top: none;	
+	background: white;
+	border-color: #cccccc;
+}
+
+
+/* About Us */
+.abtusH2{
+	text-align: center;
+	margin-bottom: 3px;
+	margin-right: 97px;
+}
+
+.abtusP{
+	text-align: center;
+	margin-right: 160px;
+	line-height: 23px;;
+	font-size: 16px;
+}
+
+.underline{
+	border-bottom:3px solid #cccccc; 
+	width:530px; 
+	padding-bottom:5px;
+}
+
+
+
+/* Register */
+.regiH2{
+	text-align: center;
+	margin-bottom: 3px;
+}
+
+.regibox{
+    height: 30px;
+	margin-right: 3px;
+	margin-top: 15px;
+	padding-left: 10px;
+	font-size: 14px;
+	border: solid 2px;
+	border-radius: 15px;
+	border-color: #cccccc;
+}
+
+.regimail{
+	width: 390px;	
+}
+
+.regibtn{
+    height: 42px;
+	width: 390px;	
+	margin-top: 15px;
+	font-size: 14px;
+	font-weight: bold;
+	background-color: #a3e6ff;
+	border: solid 2px;
+	border-radius: 15px;
+	border-color: #cccccc;
+}
+
+.underline1{
+	border-bottom:3px solid #cccccc; 
+	width: 390px; 
+	padding-bottom:5px;
+}
+
+
+
+/* User Menu */
+.usermenu{
+	display: flex;
+    align-items: center;
+	padding: 50px 210px 50px;
+	height: 75px;
+	border: solid;
+	border-top: none;	
+	background: white;
+	border-color: #cccccc;
+}
+
+.btn{
+	height: 42px;
+	width: 130px;
+	margin-left: 8px;
+	font-size: 14px;
+	font-weight: bold;
+	background-color: #a3e6ff;
+	border: solid 2px;
+	border-radius: 15px;
+	border-color: #cccccc;
+}
+
+.username {
+	color: #4dc9f7;
+	font-size: 25px; 
+}
+
+
+
+/* Add a recipe form */
+.recipeform{	
+    padding: 50px 300px 100px;
+	border: solid;
+	border-top: none;	
+	background: white;
+	border-color: #cccccc;
+}
+
+.underline2{
+	border-bottom:3px solid #cccccc; 
+	width: 840px; 
+	padding-bottom:5px;
+}
+
+.txtarea{
+	resize: none;
+	margin-top: 10px;
+	padding: 10px;
+	font-size: 14px;
+	border: solid 2px;
+	border-radius: 15px;
+	border-color: #cccccc;
+}
+
+.recipebox{
+	height:30px;
+	width: 335px;
+	margin: 15px 3px 0px 22px;
+	padding-left: 10px;
+	font-size: 14px;
+	border: solid 2px;
+	border-radius: 15px;
+	border-color: #cccccc;
+}
+
+input[type="file"]::file-selector-button {
+	height:30px;
+	width: 120px;
+	margin: 15px 3px 0px 17px;
+	text-align: center;
+	font-family: "Montserrat", sans-serif;
+	font-size: 14px;
+	background-color: #e7e6e6;
+	border: solid 2px;
+	border-radius: 15px;
+	border-color: #cccccc;
+}
+
+input[type="file"]::file-selector-button:hover {
+	background-color: #afafaf;
+	cursor: pointer;
+}
+
+input[type="file"]::target-text{
+	font-size: 25px;
+	font-family: "Montserrat", sans-serif;
+}
+
+select{
+	height:30px;
+	width: 120px;
+	margin: 15px 3px 0px 48px;
+	text-align: center;
+	font-size: 14px;
+	background-color: #e7e6e6;
+	border: solid 2px;
+	border-radius: 15px;
+	border-color: #cccccc;
+}
+
+.cancelbtn{
+	height: 42px;
+	width: 130px;
+	float: right;
+	margin-left: 8px;
+	font-size: 14px;
+	font-weight: bold;
+	background-color: #e7e6e6;
+	border: solid 2px;
+	border-radius: 15px;
+	border-color: #cccccc;
+}
+
+.postbtn{
+	height: 42px;
+	width: 130px;
+	float: right;
+	margin-left: 8px;
+	font-size: 14px;
+	font-weight: bold;
+	background-color: rgb(163, 230, 255);
+	border: solid 2px;
+	border-radius: 15px;
+	border-color: #cccccc;
+}
+
+/* Title */
+.title{
+	text-align: center;
+	color: #4dc9f7;
+	width: 100%;
+	border: solid;
+	border-top: none;	
+	border-bottom: none;	
+	background: white;
+	border-color: #cccccc;
+	padding-top: 25px;
+}
+
+
+
+/* Main content - Recipes */
+main{
+	display: flex;
+    justify-content: space-between;
+    align-items: stretch;
+	padding: 35px 220px 50px 150px;
+	border: solid;
+	border-top: none;
+	background: white;
+	border-color: #cccccc;
+}
+
+.postimg{
+	width: 300px;
+	height: 200px;
+	border: solid;
+	border: solid 3px;
+	border-radius: 15px;
+	border-color: #cccccc;
+}
+
+.postimg:hover {
+	border-color: #4d75f7;
+}
+
+.postitle {
+    font-size: 22px;
+    color: #4dc9f7;
+    text-decoration: none;
+}
+
+.postitle:hover {
+    color: #4d75f7;
+}
+
+table {
+    margin-left: 57px;
+}
+
+tr {
+    margin: 30px;
+}
+
+td {
+    margin: 30px;
+    padding: 20px;
+}
+
+a:hover { 
+	text-decoration: none;
+}
+
+
+a:active { 
+	text-decoration: none; 
+}
+
+.norec{
+	padding-left: 35%;
+}
+
+
+/* Display */
+.container {
+	background-color: white;
+	padding: 20px;
+	margin: 0 auto; 
+	border: solid;	
+	border-color: #cccccc;
+}
+  
+.segment {
+	margin-top: 20px;
+	padding-left: 300px;
+	padding-right: 300px;
+}
+  
+.segment h3 {
+	margin-bottom: 10px;
+}
+  
+.segment p {
+	margin: 0;
+}
+
+.postimg1{
+	width: 800px;
+	height: 400px;
+	border: solid;
+	border: solid 3px;
+	border-radius: 15px;
+	border-color: #cccccc;
+	margin-left: 300px;
+}
+
+/* Go Back */
+.backbtn{
+    height: 42px;
+	width: 130px;
+	margin-top: 23px;
+	font-size: 14px;
+	font-weight: bold;
+	background-color: #e7e6e6;;
+	border: solid 2px;
+	border-radius: 15px;
+	border-color: #cccccc;
+	margin-left: 155px;
+	margin-bottom: 25px;
+}
+
+.back {
+	background-color: white;
+	border: solid;
+	border-color: #cccccc;
+	border-top: none;
+	border-bottom: none;
+}
+
+/* Comments */
+.comtitle{
+	padding-top: 50px;
+}
+
+.addcomment{
+	resize: none;
+	margin-top: 10px;
+	padding: 10px;
+	font-size: 14px;
+	border: solid 2px;
+	border-radius: 15px;
+	border-color: #cccccc;
+}
+
+.commentbtn{
+	height: 42px;
+	width: 130px;
+	margin-top: 23px;
+	margin-left: 25px;
+	font-size: 14px;
+	font-weight: bold;
+	background-color: #a3e6ff;
+	border: solid 2px;
+	border-radius: 15px;
+	border-color: #cccccc;
+}
+.commentbtn:hover {
+	background-color: #4dc9f7;
+	cursor: pointer;
+}
+.comment{
+	padding-left: 20px;
+	padding-top: 5px;
+	color: #4d75f7;
+	font-size: 110%;
+}
+
+.comment1{
+	padding-left: 20px;
+	padding-bottom: 15px;
+}
+
+/* Footer */
+footer{
+	height: 150px;
+	display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 30px 14%;
+	margin-bottom: 25px;
+	background: white;
+	border: solid;	
+	border-top: none;
+	border-radius: 0px 0px 50px 50px;
+	border-color: #cccccc;
+}
+
+
+
+/* Error messages*/
+#error{
+	color:  rgb(247, 48, 48);
+	text-align: center;
+}
