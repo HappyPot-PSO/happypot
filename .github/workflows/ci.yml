@@ -41,12 +41,14 @@ jobs:
     - name: Run PHPUnit tests
       run: |
         ./vendor/bin/phpunit --coverage-text --coverage-clover=coverage.xml
+      
+      # hapus
 
-    - name: Upload coverage to Codecov
-      uses: codecov/codecov-action@v3
-      with:
-        file: ./coverage.xml
-        fail_ci_if_error: false
+    # - name: Upload coverage to Codecov
+    #   uses: codecov/codecov-action@v3
+    #   with:
+    #     file: ./coverage.xml
+    #     fail_ci_if_error: false
 
     - name: PHP Syntax Check
       run: find . -type f -name "*.php" -not -path "*/vendor/*" -exec php -l {} \;
