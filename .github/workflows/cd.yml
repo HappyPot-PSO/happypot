@@ -49,12 +49,14 @@ jobs:
     if: github.event_name == 'push' && github.ref == 'refs/heads/main'
     
     steps:
+    - uses: actions/checkout@v3
+    
     - name: Set short git commit SHA
       id: vars
       run: |
         calculatedSha=$(git rev-parse --short ${{ github.sha }})
         echo "::set-output name=short_sha::$calculatedSha"
-        
+
     - id: 'auth'
       uses: 'google-github-actions/auth@v2'
       with:
