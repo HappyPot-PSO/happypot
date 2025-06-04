@@ -7,7 +7,7 @@ on:
 
 env:
   PROJECT_ID: ${{ secrets.PROJECT_ID }}
-  SERVICE_NAME: recipe-website
+  SERVICE_NAME: happypot
   REGION: asia-southeast1
 
 jobs:
