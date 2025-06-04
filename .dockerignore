@@ -1,0 +1,11 @@
+.git
+.gitignore
+.env
+*.md
+*.bak
+*.mwb
+*.mwb.bak
+postimages/*
+!postimages/.gitkeep
+images/*
+!images/.gitkeep 

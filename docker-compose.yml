@@ -1,0 +1,45 @@
+version: '3.8'
+
+services:
+  app:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: recipe-app
+    restart: unless-stopped
+    working_dir: /var/www/html
+    volumes:
+      - ./:/var/www/html
+      - ./postimages:/var/www/html/postimages
+      - ./images:/var/www/html/images
+    ports:
+      - "8080:80"
+    depends_on:
+      - db
+    networks:
+      - recipe-network
+
+  db:
+    image: mysql:8.0
+    container_name: recipe-db
+    restart: unless-stopped
+    environment:
+      MYSQL_DATABASE: recipedb
+      MYSQL_USER: recipeadmin
+      MYSQL_PASSWORD: kod12345
+      MYSQL_ROOT_PASSWORD: rootpassword
+    volumes:
+      - dbdata:/var/lib/mysql
+      - ./recipedb.sql:/docker-entrypoint-initdb.d/recipedb.sql
+    ports:
+      - "3306:3306"
+    networks:
+      - recipe-network
+
+networks:
+  recipe-network:
+    driver: bridge
+
+volumes:
+  dbdata:
+    driver: local
