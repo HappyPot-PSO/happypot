@@ -1,14 +1,13 @@
 
-name: Recipe Website CI/CD
+name: CD
 
 on:
   push:
     branches: [ main ]
 
 env:
-  PROJECT_ID: ${{ secrets.PROJECT_ID }}
   SERVICE_NAME: happypot
-  REGION: asia-southeast1
+  REGION: asia-southeast2
 
 jobs:
   build-and-push:
@@ -21,7 +20,7 @@ jobs:
     - name: Set up Cloud SDK
       uses: google-github-actions/setup-gcloud@v1
       with:
-        project_id: ${{ env.PROJECT_ID }}
+        project_id: ${{ secrets.PROJECT_ID }}
         service_account_key: ${{ secrets.GCP_SA_KEY }}
         export_default_credentials: true
 
@@ -36,8 +35,8 @@ jobs:
 
     - name: Build and Push Container
       run: |
-        docker build -t asia-southeast2-docker.pkg.dev/${{ env.PROJECT_ID }}/${{ env.SERVICE_NAME }}/${{ env.SERVICE_NAME }}:${{ steps.vars.outputs.short_sha }} .
-        docker push asia-southeast2-docker.pkg.dev/${{ env.PROJECT_ID }}/${{ env.SERVICE_NAME }}/${{ env.SERVICE_NAME }}:${{ steps.vars.outputs.short_sha }}
+        docker build -t asia-southeast2-docker.pkg.dev/${{ secrets.PROJECT_ID }}/${{ env.SERVICE_NAME }}/${{ env.SERVICE_NAME }}:${{ steps.vars.outputs.short_sha }} .
+        docker push asia-southeast2-docker.pkg.dev/${{ secrets.PROJECT_ID }}/${{ env.SERVICE_NAME }}/${{ env.SERVICE_NAME }}:${{ steps.vars.outputs.short_sha }}
 
   deploy:
     needs: build-and-push
@@ -48,7 +47,7 @@ jobs:
     - name: Set up Cloud SDK
       uses: google-github-actions/setup-gcloud@v1
       with:
-        project_id: ${{ env.PROJECT_ID }}
+        project_id: ${{ secrets.PROJECT_ID }}
         service_account_key: ${{ secrets.GCP_SA_KEY }}
         export_default_credentials: true
 
@@ -56,6 +55,6 @@ jobs:
       uses: google-github-actions/deploy-cloudrun@v1
       with:
         service: ${{ env.SERVICE_NAME }}
-        image: asia-southeast2-docker.pkg.dev/${{ env.PROJECT_ID }}/${{ env.SERVICE_NAME }}/${{ env.SERVICE_NAME }}:${{ steps.vars.outputs.short_sha }}
+        image: asia-southeast2-docker.pkg.dev/${{ secrets.PROJECT_ID }}/${{ env.SERVICE_NAME }}/${{ env.SERVICE_NAME }}:${{ steps.vars.outputs.short_sha }}
         region: ${{ env.REGION }}
         flags: '--allow-unauthenticated'
