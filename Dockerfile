@@ -8,19 +8,26 @@ RUN a2enmod rewrite
 
 COPY . /var/www/html/
 
+RUN chmod 755 -R /var/www/html/images
+
 # Konfigurasi Virtual Host
-RUN echo "<VirtualHost *:80>\n" > /etc/apache2/sites-available/simple-recipe.conf
-RUN echo "    ServerAdmin webmaster@localhost\n" >> /etc/apache2/sites-available/simple-recipe.conf
-RUN echo "    DocumentRoot /var/www/html\n" >> /etc/apache2/sites-available/simple-recipe.conf
-RUN echo "    ServerName localhost\n" >> /etc/apache2/sites-available/simple-recipe.conf
-RUN echo "    <Directory /var/www/html/>\n" >> /etc/apache2/sites-available/simple-recipe.conf
-RUN echo "        Options Indexes FollowSymLinks MultiViews\n" >> /etc/apache2/sites-available/simple-recipe.conf
-RUN echo "        AllowOverride All\n" >> /etc/apache2/sites-available/simple-recipe.conf
-RUN echo "        Require all granted\n" >> /etc/apache2/sites-available/simple-recipe.conf
-RUN echo "    </Directory>\n" >> /etc/apache2/sites-available/simple-recipe.conf
-RUN echo "    ErrorLog ${APACHE_LOG_DIR}/error.log\n" >> /etc/apache2/sites-available/simple-recipe.conf
-RUN echo "    CustomLog ${APACHE_LOG_DIR}/access.log combined\n" >> /etc/apache2/sites-available/simple-recipe.conf
-RUN echo "</VirtualHost>\n" >> /etc/apache2/sites-available/simple-recipe.conf
+RUN cat <<EOF > /etc/apache2/sites-available/simple-recipe.conf
+<VirtualHost *:80>
+    ServerAdmin webmaster@localhost
+    DocumentRoot /var/www/html
+    ServerName localhost
+
+    <Directory /var/www/html/>
+        Options Indexes FollowSymLinks MultiViews
+        AllowOverride All
+        Require all granted
+    </Directory>
+
+    ErrorLog \${APACHE_LOG_DIR}/error.log
+    CustomLog \${APACHE_LOG_DIR}/access.log combined
+</VirtualHost>
+EOF
+
 
 RUN a2ensite simple-recipe.conf
 RUN a2dissite 000-default.conf
