@@ -1,0 +1,30 @@
+<?xml version="1.0"?>
+<ruleset name="PHP_CodeSniffer">
+    <description>PHP CodeSniffer configuration for the project.</description>
+
+    <!-- What to scan -->
+    <file>.</file>
+
+    <!-- What to exclude -->
+    <exclude-pattern>*/vendor/*</exclude-pattern>
+    <exclude-pattern>*/node_modules/*</exclude-pattern>
+    <exclude-pattern>*/tests/*</exclude-pattern>
+
+    <!-- How to scan -->
+    <arg name="extensions" value="php"/>
+    <arg name="parallel" value="75"/>
+    <arg value="sp"/>
+
+    <!-- Rules to be applied -->
+    <rule ref="PSR12">
+        <!-- Exclude some PSR12 rules -->
+        <exclude name="PSR12.Classes.OpeningBraceSpace"/>
+        <exclude name="PSR12.Functions.ReturnTypeDeclaration"/>
+    </rule>
+
+    <!-- Show colors in console -->
+    <arg name="colors"/>
+    
+    <!-- Show progress -->
+    <arg value="p"/>
+</ruleset> 

@@ -1,0 +1,62 @@
+name: Recipe Website CI/CD
+
+on:
+  pull_request:
+    branches: [ main ]
+
+env:
+  PROJECT_ID: ${{ secrets.GCP_PROJECT_ID }}
+  SERVICE_NAME: recipe-website
+  REGION: asia-southeast1
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+
+    steps:
+    - uses: actions/checkout@v3
+
+    - name: Set up PHP
+      uses: shivammathur/setup-php@v2
+      with:
+        php-version: '8.1'
+        extensions: mbstring, xml, gd, pdo_mysql
+        coverage: xdebug
+        tools: composer:v2
+
+    - name: Get composer cache directory
+      id: composer-cache
+      run: echo "dir=$(composer config cache-files-dir)" >> $GITHUB_OUTPUT
+
+    - name: Cache dependencies
+      uses: actions/cache@v3
+      with:
+        path: ${{ steps.composer-cache.outputs.dir }}
+        key: ${{ runner.os }}-composer-${{ hashFiles('**/composer.lock') }}
+        restore-keys: ${{ runner.os }}-composer-
+
+    - name: Install dependencies
+      run: composer install --prefer-dist --no-progress
+
+    - name: Run PHPUnit tests
+      run: |
+        ./vendor/bin/phpunit --coverage-text --coverage-clover=coverage.xml
+
+    - name: Upload coverage to Codecov
+      uses: codecov/codecov-action@v3
+      with:
+        file: ./coverage.xml
+        fail_ci_if_error: false
+
+    - name: PHP Syntax Check
+      run: find . -type f -name "*.php" -not -path "*/vendor/*" -exec php -l {} \;
+
+    - name: PHP Code Sniffer
+      continue-on-error: true
+      run: |
+        ./vendor/bin/phpcs --standard=PSR12 --extensions=php .
+
+    - name: PHP Mess Detector
+      continue-on-error: true
+      run: |
+        ./vendor/bin/phpmd . text cleancode,codesize,design,naming --exclude vendor/
