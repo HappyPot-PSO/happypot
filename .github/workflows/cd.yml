@@ -6,7 +6,7 @@ on:
     branches: [ main ]
 
 env:
-  PROJECT_ID: ${{ secrets.GCP_PROJECT_ID }}
+  PROJECT_ID: ${{ secrets.PROJECT_ID }}
   SERVICE_NAME: recipe-website
   REGION: asia-southeast1
 
@@ -36,8 +36,8 @@ jobs:
 
     - name: Build and Push Container
       run: |
-        docker build -t gcr.io/${{ env.PROJECT_ID }}/${{ env.SERVICE_NAME }}/${{ env.SERVICE_NAME }}:${{ steps.vars.outputs.short_sha }} .
-        docker push gcr.io/${{ env.PROJECT_ID }}/${{ env.SERVICE_NAME }}/${{ env.SERVICE_NAME }}:${{ steps.vars.outputs.short_sha }}
+        docker build -t asia-southeast2-docker.pkg.dev/${{ env.PROJECT_ID }}/${{ env.SERVICE_NAME }}/${{ env.SERVICE_NAME }}:${{ steps.vars.outputs.short_sha }} .
+        docker push asia-southeast2-docker.pkg.dev/${{ env.PROJECT_ID }}/${{ env.SERVICE_NAME }}/${{ env.SERVICE_NAME }}:${{ steps.vars.outputs.short_sha }}
 
   deploy:
     needs: build-and-push
@@ -56,6 +56,6 @@ jobs:
       uses: google-github-actions/deploy-cloudrun@v1
       with:
         service: ${{ env.SERVICE_NAME }}
-        image: gcr.io/${{ env.PROJECT_ID }}/${{ env.SERVICE_NAME }}/${{ env.SERVICE_NAME }}:${{ steps.vars.outputs.short_sha }}
+        image: asia-southeast2-docker.pkg.dev/${{ env.PROJECT_ID }}/${{ env.SERVICE_NAME }}/${{ env.SERVICE_NAME }}:${{ steps.vars.outputs.short_sha }}
         region: ${{ env.REGION }}
         flags: '--allow-unauthenticated'
