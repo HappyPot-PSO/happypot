@@ -8,7 +8,7 @@ RUN a2enmod rewrite
 
 COPY . /var/www/html/
 
-RUN chmod -R 766 /var/www/html/
+RUN chown -R www-data:www-data /var/www/html/
 
 # Konfigurasi Virtual Host
 RUN cat <<EOF > /etc/apache2/sites-available/simple-recipe.conf
