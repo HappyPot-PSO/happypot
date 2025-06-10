@@ -22,13 +22,21 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     $imageTempPath = $_FILES["img"]["tmp_name"];
     $extension = pathinfo($_FILES["img"]["name"], PATHINFO_EXTENSION);
     $imageName = uniqid() . "." . $extension;
-    $imagePath =  $_SERVER['DOCUMENT_ROOT'] . "/postimages/" . $imageName;
-
-    if (move_uploaded_file($imageTempPath, $imagePath)) {
-      // Image uploaded successfully
-    } else {    
-      die("Image upload error: Failed to move uploaded file.");
+    
+    // Create postimages directory if it doesn't exist
+    $uploadDir = 'postimages/';
+    if (!file_exists($uploadDir)) {
+        mkdir($uploadDir, 0777, true);
     }
+    
+    // Set the full path for the image
+    $imagePath = $uploadDir . $imageName;
+    
+    // Move the uploaded file to the postimages directory
+    if (!move_uploaded_file($imageTempPath, $imagePath)) {
+        die("Error uploading file. Please try again.");
+    }
+    
   } else {
     die("Image upload error: No file uploaded or file upload error occurred.");
   }
