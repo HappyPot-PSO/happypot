@@ -22,7 +22,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     $imageTempPath = $_FILES["img"]["tmp_name"];
     $extension = pathinfo($_FILES["img"]["name"], PATHINFO_EXTENSION);
     $imageName = uniqid() . "." . $extension;
-    $imagePath = "postimages/" . $imageName;
+    $imagePath =  $_SERVER['DOCUMENT_ROOT'] . "/postimages/" . $imageName;
 
     if (move_uploaded_file($imageTempPath, $imagePath)) {
       // Image uploaded successfully
