@@ -1,13 +1,13 @@
 <?php
-if (isset($_POST['logout'])) {
-    // Destroy session - Log out
-    session_destroy();
-    header("Location: index.php");
-    exit();
-}?>
+session_start(); // Start the session
 
-<!-- Log-out -->
-    <form method="POST" action="">
-        <button class="logoutbtn btnhovcl" type="submit" name="logout">Log-out</button>
-    </form>
-</header>
+// Unset all of the session variables
+$_SESSION = array();
+
+// Destroy the session
+session_destroy();
+
+// Redirect to the login page (index.php)
+header("Location: index.php");
+exit();
+?>
