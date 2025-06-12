@@ -248,7 +248,6 @@ if (!isset($dbc)) {
     </style>
 </head>
 <body class="dashboard-page-body">
-
     <header class="dashboard-site-header">
         <a href="index.php" class="logo-link">
             <img class="logo-image" src="images/logo.png" alt="Happy Pot Logo">
@@ -263,9 +262,7 @@ if (!isset($dbc)) {
             // Tambahkan kelas spesifik atau selector yang konsisten jika perlu untuk tombol "Post a recipe"
             echo '<button class="btn btnhov" type="button" onClick="location.href=\'profile.php\'">Profile</button>';
             echo '<button class="btn btnhov post-recipe-btn" type="button" onClick="location.href=\'recipe.php\'">Post a recipe</button>'; /* Added class for specific styling */
-            echo '<form method="POST" action="logout.php" style="display:inline;">';
-            echo '<button class="logoutbtn btnhovel" type="submit" name="logout">Log-out</button>';
-            echo '</form>';
+            echo '<button class="logoutbtn btnhovel" type="button" id="logoutConfirmBtn">Log-out</button>';
             ?>
         </div>
     </header>
@@ -274,7 +271,6 @@ if (!isset($dbc)) {
         <div class="dashboard-content-box">
             
             <h1 class="title">Recipes</h1>
-
             <main>
                 <?php
                 if (isset($_SESSION["post_success"]) && $_SESSION["post_success"]) {
@@ -337,7 +333,39 @@ if (!isset($dbc)) {
 
         </div> 
     </div>
-    
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            // SweetAlert for Logout Confirmation
+            document.getElementById('logoutConfirmBtn').addEventListener('click', function(e) {
+                e.preventDefault(); 
+
+                swal({
+                    title: "Logout Confirmation",
+                    text: "Are you sure you want to log out?",
+                    icon: "warning",
+                    buttons: {
+                        cancel: "Cancel",
+                        confirm: {
+                            text: "Yes, Logout",
+                            value: true,
+                            className: "swal-button--danger", 
+                        }
+                    },
+                    dangerMode: true,
+                })
+                .then((willLogout) => {
+                    if (willLogout) {
+                        window.location.href = 'logout.php'; 
+                    } else {
+                        swal("Logout cancelled!", {
+                            icon: "info",
+                            button: "OK",
+                        });
+                    }
+                });
+            });
+        });
+    </script>
 </body>
 </html>
 <?php
