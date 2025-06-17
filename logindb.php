@@ -31,25 +31,41 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
             $_SESSION["user_id"] = $row["id"];
             $_SESSION["username"] = $row["fname"];
 
-            // Redirect to index.php
-            header("Location: index.php");
+            // Unset any previous login/registration status from session
+            // This prevents old alerts from showing up on successful login
+            unset($_SESSION["login_error"]);
+            unset($_SESSION["login_errorl"]); // Changed from login_error1
+            unset($_SESSION["registration_success"]);
+            unset($_SESSION["email_attempt"]); // Clear pre-fill email on success
+
+            // Redirect to dashboard.php on successful login
+            header("Location: dashboard.php");
             exit();
         } else {
+            // Incorrect password
             $_SESSION["login_error"] = true;
-            header("Location: index.php");
+            $_SESSION["email_attempt"] = $email; // Store email for pre-filling the form
+            header("Location: login_page.php"); // Redirect back to login_page.php
             exit();
         }
     } else {
-        $_SESSION["login_error1"] = true;
-        header("Location: index.php");
+        // User doesn't exist
+        $_SESSION["login_errorl"] = true; // Corrected to login_errorl
+        $_SESSION["email_attempt"] = $email; // Store email for pre-filling the form
+        header("Location: login_page.php"); // Redirect back to login_page.php
         exit();
     }
 } else {
-    header("Location: index.php");
+    // If someone tries to access logindb.php directly without POST
+    header("Location: login_page.php"); // Redirect to login page
     exit();
 }
 
 // Close the database connection
-$dbc->close();
+// Note: This line might not be reached if an exit() occurs earlier,
+// but it's good practice for when the script finishes naturally.
+if (isset($dbc)) {
+    $dbc->close();
+}
 
 ?>
