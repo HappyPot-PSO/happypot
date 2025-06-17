@@ -188,19 +188,26 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             font-weight: bold; margin: 0;
         }
         .header-nav { display: flex; align-items: center; }
-        .header-nav .usermenu-greeting,
-        .header-nav .btn,
-        .header-nav form { margin-left: 15px; }
-        .header-nav .usermenu-greeting {font-weight:bold; color:#555;}
+
+        .header-nav .usermenu-greeting {
+            font-weight:bold;
+            color:#555;
+            margin-right: 15px; 
+        }
         .header-nav .username {color:#4dc9f7;}
         .header-nav .btn, .header-nav .logoutbtn {
             padding: 8px 15px; font-size:0.9em; border-radius:8px; text-decoration:none; cursor:pointer;
             border: 1px solid #ccc; background-color: #e9e9e9; color: #333;
         }
+        .header-nav .btn {
+            margin-left: 15px;
+        }
+        .header-nav button[onClick*='recipe.php'] {
+            margin-right: 10px; 
+        }
         .header-nav .btn.btnhov:hover, .header-nav .logoutbtn.btnhovel:hover {
             background-color: #d0d0d0;
         }
-
         .main-content-wrapper {
             flex-grow: 1; width: 100%; display: flex;
             justify-content: center; align-items: flex-start;
