@@ -1,6 +1,8 @@
 # 🍽️ Happy Pot
 Happy Pot adalah aplikasi web yang berfungsi sebagai platform bagi penggemar makanan untuk menemukan, membaca, dan mengunggah resep makanan. Aplikasi ini menyediakan fitur utama untuk interaksi yang dipersonalisasi dan pengalaman berbagi kuliner.
 
+![Happy Pot Welcome Screen](images/welcomescreen.png)
+
 Fitur Utama:
 - Recipe Browsing: Menjelajahi berbagai resep dengan instruksi dan bahan terperinci.
 - User Registration and Login: Autentikasi pengguna yang aman untuk interaksi yang dipersonalisasi.
