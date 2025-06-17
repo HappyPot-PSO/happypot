@@ -7,7 +7,7 @@ Fitur Utama:
 - Upload Recipe: Pengguna dapat mengunggah resep mereka sendiri ke situs web.
 - Commenting System: Menulis dan membaca komentar pada resep untuk berbagi tips dan umpan balik.
 
-# 💻 Stack teknologi:
+# 💻 Teknologi yang Digunakan
 - Frontend: HTML, CSS, JavaScript
 - Backend: PHP
 - Database: MySQL (dikelola melalui Google Cloud SQL di lingkungan produksi)
@@ -22,91 +22,99 @@ Untuk menjalankan proyek ini secara lokal, Anda memerlukan:
 # 🚀 Cara Setup di Lingkungan Lokal
 Ikuti langkah-langkah berikut untuk menjalankan aplikasi secara lokal menggunakan Docker:
 
-1. Clone Repository:
+1. Clone Repository
+Pertama, klon repositori proyek ke mesin lokal Anda dan masuk ke direktorinya:
 ``` bash
 git clone https://github.com/HappyPot-PSO/happypot.git
 cd happypot
 ```
 
-3. Navigasi ke Direktori Proyek Utama:
-Asumsi Dockerfile dan file PHP utama di direktori
+2. Pastikan File Database Ada
+Pastikan file ```recipedb.sql``` berada di direktori yang sama dengan ```docker-compose.yml``` File ini akan digunakan untuk menginisialisasi skema database MySQL Anda.
 
-4. Build Image Docker:
+3. Jalankan Aplikasi dengan Docker Compose
+Dari direktori root proyek Anda (tempat ```docker-compose.yml``` berada), jalankan perintah berikut:
 ``` bash
-docker build -t simple-recipe-web .
+docker-compose up -d
 ```
+Perintah ini akan melakukan beberapa hal secara otomatis:
+- Membangun image Docker untuk aplikasi web (PHP + Apache) jika belum ada atau jika ada perubahan pada ```Dockerfile```.
+- Membuat dan menjalankan container untuk aplikasi web (```happypot-app```) dan database MySQL (```happypot-db```).
+- Memetakan port aplikasi 80 di dalam kontainer ke port ```8080``` di mesin lokal Anda.
+- Mengimpor ```recipedb.sql``` ke dalam database MySQL secara otomatis saat container database pertama kali diinisialisasi.
 
-5. Jalankan Container Docker (container aplikasi web (PHP + Apache) dan memetakan port.):
-``` bash
-docker run -p 8080:80 -d \
-    --name simple-recipe-app \
-    -v "direktori root proyek":/var/www/html \
-    simple-recipe-web
-```
-
-6. Akses aplikasi melalui
+4. Akses Aplikasi
+Setelah container berjalan, Anda dapat mengakses aplikasi Happy Pot melalui browser Anda di:
 ``` bash
 http://localhost:8080.
 ```
 
-Catatan Penting untuk Database MySQL Lokal:
-Untuk menjalankan aplikasi ini secara lokal dengan database, Anda dapat menggunakan docker-compose yang sudah disediakan di repositori Anda. docker-compose.yml akan mengatur dan menjalankan container aplikasi dan database MySQL secara bersamaan.
-Di direktori yang sama dengan docker-compose.yml
-``` bash
-docker-compose up -d
-```
-Pastikan recipedb.sql Anda berada di lokasi yang benar yang direferensikan oleh docker-compose.yml untuk inisialisasi skema database.
-
-
 # 🧪 Cara Menjalankan Linter / Unit Test di Lingkungan Lokal
 Proyek ini menggunakan PHPUnit untuk unit testing dan Composer untuk mengelola dependensi, serta tools untuk memeriksa kualitas kode.
+
 1. Instal Dependensi Composer:
-Pastikan Anda sudah berada di direktori root proyek Anda,
+Pastikan Anda sudah berada di direktori root proyek Anda, lalu jalankan:
+``` bash
 composer install
+```
 
 2. Jalankan Validasi Composer
 ``` bash
 composer validate --strict
 ```
 
-4. Jalankan PHPUnit Tests:
+3. Jalankan PHPUnit Tests:
+``` bash
 ./vendor/bin/phpunit
+```
 
 5. Jalankan PHP Code Sniffer (Linter):
+``` bash
 ./vendor/bin/phpcs --standard=PSR12 --extensions=php .
+```
 
-6. Jalankan PHP Mess Detector (Code Quality Analysis):
+7. Jalankan PHP Mess Detector (Code Quality Analysis):
+``` bash
 ./vendor/bin/phpmd . text cleancode,codesize,controversial,design,naming,unusedcode
+```
 
 # ➕ Cara Menambahkan Fitur Baru
 Proyek ini mengikuti alur kerja Git standar untuk pengembangan fitur. Ikuti langkah-langkah berikut untuk menambahkan fitur baru atau melakukan perbaikan:
+
 1. Buat Branch Baru:
 ``` bash
 git checkout main
-git pull origin main # Pastikan branch main Anda terbaru
+git pull origin main
 git checkout -b nama-fitur-baru-anda
 ```
 
-3. Kembangkan Fitur & Lakukan Commit:
+2. Kembangkan Fitur & Lakukan Commit:
+Setelah Anda selesai mengembangkan fitur atau perbaikan, tambahkan perubahan dan buat commit:
 ``` bash
 git add .
-git commit -m "feat: Menambahkan fungsionalitas baru untuk [Deskripsi Fitur]"
+git commit -m "Menambahkan Fitur"
 ```
 
-4. Dorong Branch ke GitHub:
+3. Dorong Branch ke GitHub:
 ``` bash
 git push origin nama-fitur-baru-anda
 ```
 
-5. Buat Pull Request (PR) dari branch baru Anda ke branch main.
+4. Buat Pull Request
+Buka GitHub dan buat Pull Request (PR) dari branch baru Anda ```(nama-fitur-baru-anda)``` ke branch ```main```. Berikan deskripsi yang jelas tentang fitur yang Anda tambahkan.
 
+5. Review Kode & Merge:
+Setelah code review selesai dan disetujui, PR Anda akan digabungkan ke branch ```main```. Penggabungan ke main akan secara otomatis memicu _pipeline Continuous Deployment (CD)_ untuk _deploy _perubahan.
 
-6, Review Kode & Merge:
-Merged pull request ke branch main. Penggabungan ke main akan memicu pipeline Continuous Deployment (CD).
-
-# 🌐 Public URL Webnya
-Aplikasi ini di-deploy ke Google Cloud Run sebagai bagian dari pipeline CI/CD. Setelah berhasil di-deploy melalui GitHub Actions, Anda dapat mengakses aplikasi di URL publik yang akan disediakan oleh Cloud Run.
-URL Aplikasi: 
+# 🌐 Public URL 
+Anda dapat mengakses aplikasi melalui URL publik berikut:
 ``` bash
-https://happypot-5405j2592366-asia-southeast2.a.run.app
+https://happypot-546050259366.asia-southeast2.run.app
 ```
+
+# 📝 License
+Proyek ini merupakan hasil _forking_ dari repositori berikut: https://github.com/xritzia/Simple-Recipe-Website
+
+
+
+Terima kasih telah menjelajahi proyek Happy Pot! Kami harap dokumentasi ini membantu Anda memulai dan memahami aplikasi kami.
