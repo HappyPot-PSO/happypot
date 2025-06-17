@@ -7,7 +7,7 @@ use PHPUnit\Framework\MockObject\MockObject;
 
 class TestCase extends BaseTestCase
 {
-    protected $db;
+    protected $databaseconnection;
     protected $lastInsertId = 1;
 
     protected function setUp(): void
@@ -15,26 +15,26 @@ class TestCase extends BaseTestCase
         parent::setUp();
         
         // Create mock for mysqli
-        $this->db = $this->getMockBuilder(\mysqli::class)
+        $this->databaseconnection = $this->getMockBuilder(\mysqli::class)
             ->disableOriginalConstructor()
             ->onlyMethods(['prepare', 'query', 'close'])
             ->addMethods(['connect_error', 'getInsertId'])
             ->getMock();
         
         // Set up common mock expectations
-        $this->db->method('prepare')
+        $this->databaseconnection->method('prepare')
             ->willReturn($this->createMock(\mysqli_stmt::class));
             
-        $this->db->method('query')
+        $this->databaseconnection->method('query')
             ->willReturn($this->createMock(\mysqli_result::class));
             
-        $this->db->method('connect_error')
+        $this->databaseconnection->method('connect_error')
             ->willReturn(null);
 
-        $this->db->method('close')
+        $this->databaseconnection->method('close')
             ->willReturn(true);
 
-        $this->db->method('getInsertId')
+        $this->databaseconnection->method('getInsertId')
             ->will($this->returnCallback(function() {
                 return $this->lastInsertId;
             }));
@@ -42,7 +42,7 @@ class TestCase extends BaseTestCase
 
     protected function tearDown(): void
     {
-        $this->db = null;
+        $this->databaseconnection = null;
         $this->lastInsertId = 1;
         parent::tearDown();
     }
@@ -75,7 +75,7 @@ class TestCase extends BaseTestCase
         $stmt->method('get_result')
             ->willReturn($result);
 
-        $this->db->method('prepare')
+        $this->databaseconnection->method('prepare')
             ->willReturn($stmt);
 
         return $this->lastInsertId++;
@@ -111,7 +111,7 @@ class TestCase extends BaseTestCase
         $stmt->method('get_result')
             ->willReturn($result);
 
-        $this->db->method('prepare')
+        $this->databaseconnection->method('prepare')
             ->willReturn($stmt);
 
         return $this->lastInsertId++;
