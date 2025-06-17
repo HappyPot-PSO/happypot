@@ -7,7 +7,7 @@ if (!isset($_SESSION['user_id'])) {
     exit();
 }
 
-require_once('connect.php'); // Pastikan file koneksi database Anda ada
+require_once 'connect.php'; // Pastikan file koneksi database Anda ada
 
 $user_id_session = $_SESSION['user_id'];
 $title = 'Edit Profile - Happy Pot';
@@ -323,7 +323,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         <div class="content-box">
             <h2 class="content-title">Edit Your Profile</h2>
 
-            <?php if ($error_message): ?>
+            <?php if ($error_message) : ?>
                 <div class="message error-message"><?php echo $error_message; ?></div>
             <?php endif; ?>
 
@@ -395,7 +395,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             });
 
             // SweetAlert for Success Message (MODIFIED FOR REDIRECT)
-            <?php if (!empty($success_message)): ?>
+            <?php if (!empty($success_message)) : ?>
                 swal({
                     title: "Success!",
                     text: "<?php echo addslashes($success_message); ?>",
@@ -413,5 +413,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 </html>
 
 <?php
-if(isset($dbc)) mysqli_close($dbc);
+if(isset($dbc)) { mysqli_close($dbc);
+}
 ?>

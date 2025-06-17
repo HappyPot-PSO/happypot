@@ -1,10 +1,10 @@
 <?php
 
 // Include database connection
-include('connect.php');
+require 'connect.php';
 
 // Include sanitizeInput function
-include('sanitizeInput.php');
+require 'sanitizeInput.php';
 
 // Check if the form is submitted
 if ($_SERVER["REQUEST_METHOD"] === "POST") {

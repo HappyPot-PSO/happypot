@@ -1,6 +1,6 @@
 <?php
 session_start();
-require_once('connect.php'); 
+require_once 'connect.php'; 
 
 $page_title_text = 'Recipe Details - Happy Pot';
 $recipe_details = null;
@@ -287,8 +287,8 @@ if ($recipeId_from_url) {
             <h1 class="logo-text">Happy Pot</h1>
         </a>
         <div class="display-header-nav">
-            <?php if (isset($_SESSION['user_id'])): ?>
-                <?php if (isset($_SESSION['username'])): ?>
+            <?php if (isset($_SESSION['user_id'])) : ?>
+                <?php if (isset($_SESSION['username'])) : ?>
                     <div class="usermenu-greeting">Welcome, <span class="username"><?php echo htmlspecialchars($_SESSION['username']); ?>!</span></div>
                 <?php endif; ?>
                 <button class="btn btnhov" type="button" onclick="location.href='profile.php'">Profile</button>
@@ -305,7 +305,7 @@ if ($recipeId_from_url) {
 
     <div class="display-main-content-wrapper">
         <div class="display-content-box">
-            <?php if ($recipe_details): ?>
+            <?php if ($recipe_details) : ?>
                 <div class="recipe-image-column">
                     <img class="recipe-image-detail" src="<?php echo htmlspecialchars($recipe_details['img']); ?>" alt="<?php echo htmlspecialchars($recipe_details['title']); ?>">
                 </div>
@@ -319,8 +319,8 @@ if ($recipeId_from_url) {
                             By: <?php echo htmlspecialchars($recipe_user_details['fname']) . ' ' . htmlspecialchars($recipe_user_details['lname']); ?>
                         </span>
                         <?php 
-                        if (!empty($recipe_category_display)): 
-                        ?>
+                        if (!empty($recipe_category_display)) : 
+                            ?>
                             <span class="recipe-category">
                                 Category: <?php echo htmlspecialchars($recipe_category_display); ?>
                             </span>
@@ -339,7 +339,7 @@ if ($recipeId_from_url) {
 
                     <div id="comments-section" class="recipe-section comments-section">
                         <h3>Comments:</h3>
-                        <?php if (!empty($comments_data)): ?>
+                        <?php if (!empty($comments_data)) : ?>
                             <?php foreach ($comments_data as $comment): ?>
                                 <div class="comment-item">
                                     <p class="comment-author"><?php echo htmlspecialchars($comment['author_fname']) . ' ' . htmlspecialchars($comment['author_lname']); ?> says:</p>
@@ -351,10 +351,10 @@ if ($recipeId_from_url) {
                         <?php endif; ?>
                     </div>
 
-                    <?php if (isset($_SESSION['user_id'])): ?>
+                    <?php if (isset($_SESSION['user_id'])) : ?>
                         <div class="recipe-section add-comment-section">
                             <h3>Add a Comment:</h3>
-                            <?php if ($comment_submission_error): ?>
+                            <?php if ($comment_submission_error) : ?>
                                 <p class="comment-submission-error-text"><?php echo $comment_submission_error; ?></p>
                             <?php endif; ?>
                             <form class="add-comment-form" method="post" action="display.php?id=<?php echo htmlspecialchars($recipeId_from_url); ?>#comments-section">
@@ -376,7 +376,7 @@ if ($recipeId_from_url) {
                     <a href="dashboard.php" class="back-button">Go Back to Recipes</a>
                 </div>
 
-            <?php elseif ($recipeId_from_url): ?>
+            <?php elseif ($recipeId_from_url) : ?>
                 <p class="error-page-message">Error: Recipe not found.</p>
                    <div class="back-button-container">
                     <a href="dashboard.php" class="back-button">Go Back to Recipes</a>
@@ -414,5 +414,6 @@ if ($recipeId_from_url) {
 </body>
 </html>
 <?php
-if(isset($dbc)) mysqli_close($dbc);
+if(isset($dbc)) { mysqli_close($dbc);
+}
 ?>

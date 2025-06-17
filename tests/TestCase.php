@@ -35,9 +35,13 @@ class TestCase extends BaseTestCase
             ->willReturn(true);
 
         $this->dbc->method('getInsertId')
-            ->will($this->returnCallback(function() {
-                return $this->lastInsertId;
-            }));
+            ->will(
+                $this->returnCallback(
+                    function () {
+                        return $this->lastInsertId;
+                    }
+                )
+            );
     }
 
     protected function tearDown(): void
@@ -56,11 +60,13 @@ class TestCase extends BaseTestCase
             ->getMock();
             
         $result->method('fetch_assoc')
-            ->willReturn([
+            ->willReturn(
+                [
                 'id' => $this->lastInsertId,
                 'username' => $username,
                 'password' => password_hash($password, PASSWORD_DEFAULT)
-            ]);
+                ]
+            );
 
         // Mock the prepared statement
         $stmt = $this->getMockBuilder(\mysqli_stmt::class)
@@ -90,13 +96,15 @@ class TestCase extends BaseTestCase
             ->getMock();
             
         $result->method('fetch_assoc')
-            ->willReturn([
+            ->willReturn(
+                [
                 'id' => $this->lastInsertId,
                 'user_id' => $userId,
                 'title' => 'Test Recipe',
                 'ingredients' => 'Test ingredients',
                 'instructions' => 'Test instructions'
-            ]);
+                ]
+            );
 
         // Mock the prepared statement
         $stmt = $this->getMockBuilder(\mysqli_stmt::class)

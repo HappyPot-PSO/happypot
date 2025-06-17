@@ -9,3 +9,5 @@ postimages/*
 !postimages/.gitkeep
 docs/*
 !docs/.gitkeep
+vendor/*
+!vendor/.gitkeep

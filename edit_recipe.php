@@ -1,6 +1,6 @@
 <?php
 session_start();
-require_once('connect.php');
+require_once 'connect.php';
 
 if (!isset($_SESSION['user_id'])) {
     header("Location: login_page.php");
@@ -231,12 +231,12 @@ if (isset($_SESSION['recipe_action_status']) && isset($_SESSION['recipe_action_t
         <div class="edit-recipe-content-box">
 
             <h2 class="form-title">Edit Your Recipe</h2>
-            <?php if ($error_message): ?>
+            <?php if ($error_message) : ?>
                 <p class="error-message-page"><?php echo $error_message; ?></p>
                 <div style="text-align:center; margin-top:20px;">
                     <a href="profile.php" style="padding:10px 20px; background-color:#ddd; color:#333; text-decoration:none; border-radius:5px;">Go to Profile</a>
                 </div>
-            <?php elseif ($recipe_data): ?>
+            <?php elseif ($recipe_data) : ?>
                 <form id="editrecipeform" method="POST" action="recipe_upload.php" enctype="multipart/form-data">
                     <input type="hidden" name="recipe_id" value="<?php echo htmlspecialchars($recipe_data['idrec']); ?>">
                     <input type="hidden" name="existing_image" value="<?php echo htmlspecialchars($recipe_data['img']); ?>">
@@ -445,5 +445,6 @@ if (isset($_SESSION['recipe_action_status']) && isset($_SESSION['recipe_action_t
 </body>
 </html>
 <?php
-if(isset($dbc)) mysqli_close($dbc);
+if(isset($dbc)) { mysqli_close($dbc);
+}
 ?>

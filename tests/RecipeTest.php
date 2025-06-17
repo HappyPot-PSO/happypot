@@ -21,13 +21,15 @@ class RecipeTest extends TestCase
             ->getMock();
             
         $result->method('fetch_assoc')
-            ->willReturn([
+            ->willReturn(
+                [
                 'id' => $this->lastInsertId,
                 'user_id' => $userId,
                 'title' => 'Test Recipe',
                 'ingredients' => 'Test ingredients',
                 'instructions' => 'Test instructions'
-            ]);
+                ]
+            );
 
         // Mock the prepared statement
         $stmt = $this->getMockBuilder(\mysqli_stmt::class)
@@ -65,13 +67,15 @@ class RecipeTest extends TestCase
             ->getMock();
             
         $result->method('fetch_assoc')
-            ->willReturn([
+            ->willReturn(
+                [
                 'id' => $recipeId,
                 'user_id' => $userId,
                 'title' => 'Updated Recipe',
                 'ingredients' => 'Updated ingredients',
                 'instructions' => 'Updated instructions'
-            ]);
+                ]
+            );
 
         // Mock the prepared statement
         $stmt = $this->getMockBuilder(\mysqli_stmt::class)
@@ -149,7 +153,8 @@ class RecipeTest extends TestCase
             
         $result->method('fetch_all')
             ->with(MYSQLI_ASSOC)
-            ->willReturn([
+            ->willReturn(
+                [
                 [
                     'id' => $this->lastInsertId + 2,
                     'user_id' => $userId,
@@ -171,7 +176,8 @@ class RecipeTest extends TestCase
                     'ingredients' => 'Test ingredients',
                     'instructions' => 'Test instructions'
                 ]
-            ]);
+                ]
+            );
 
         // Mock the prepared statement
         $stmt = $this->getMockBuilder(\mysqli_stmt::class)
@@ -211,7 +217,8 @@ class RecipeTest extends TestCase
             
         $result->method('fetch_all')
             ->with(MYSQLI_ASSOC)
-            ->willReturn([
+            ->willReturn(
+                [
                 [
                     'id' => $this->lastInsertId,
                     'user_id' => $userId,
@@ -219,7 +226,8 @@ class RecipeTest extends TestCase
                     'ingredients' => 'Test ingredients',
                     'instructions' => 'Test instructions'
                 ]
-            ]);
+                ]
+            );
 
         // Mock the prepared statement
         $stmt = $this->getMockBuilder(\mysqli_stmt::class)
