@@ -124,8 +124,8 @@ Buka GitHub dan buat Pull Request (PR) dari branch baru Anda ```(nama-fitur-baru
 ![Happy Pot PR](docs/images/pr.png)
 
 5. Review Kode & Merge:
-Setelah code review selesai dan disetujui, PR Anda akan digabungkan ke branch ```main```. Penggabungan ke main akan secara otomatis memicu _pipeline Continuous Deployment (CD)_ untuk _deploy _perubahan.
-![Happy Pot MPR](docs/images/mpr.png)
+Setelah code review selesai dan disetujui, PR Anda akan digabungkan ke branch ```main```. Penggabungan ke main akan secara otomatis memicu _pipeline Continuous Deployment (CD)_ untuk _deploy_ perubahan.
+![Happy Pot MPR](docs/images/mpr2.png)
 
 # 🌐 Public URL 
 Anda dapat mengakses aplikasi melalui URL publik berikut:
