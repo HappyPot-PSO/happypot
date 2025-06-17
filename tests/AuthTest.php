@@ -33,11 +33,13 @@ class AuthTest extends \Tests\TestCase
             ->getMock();
             
         $result->method('fetch_assoc')
-            ->willReturn([
+            ->willReturn(
+                [
                 'id' => $userId,
                 'username' => 'testuser',
                 'password' => password_hash('testpass123', PASSWORD_DEFAULT)
-            ]);
+                ]
+            );
 
         // Mock the prepared statement
         $stmt = $this->getMockBuilder(\mysqli_stmt::class)
@@ -71,11 +73,13 @@ class AuthTest extends \Tests\TestCase
             ->getMock();
             
         $result->method('fetch_assoc')
-            ->willReturn([
+            ->willReturn(
+                [
                 'id' => $userId,
                 'username' => 'testuser',
                 'password' => password_hash('testpass123', PASSWORD_DEFAULT)
-            ]);
+                ]
+            );
 
         // Mock the prepared statement
         $stmt = $this->getMockBuilder(\mysqli_stmt::class)

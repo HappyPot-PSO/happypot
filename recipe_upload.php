@@ -1,7 +1,7 @@
 <?php
 
-include('sanitizeInput.php'); 
-include('connect.php');
+require 'sanitizeInput.php'; 
+require 'connect.php';
 session_start();
 
 if (!isset($_SESSION['user_id'])) {

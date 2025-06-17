@@ -3,10 +3,10 @@
 session_start();
 
 // Include sanitizeInput function
-include('sanitizeInput.php');
+require 'sanitizeInput.php';
 
 // Include database connection
-include('connect.php');
+require 'connect.php';
 
 // Check if the form is submitted
 if ($_SERVER["REQUEST_METHOD"] == "POST") {

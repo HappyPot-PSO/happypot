@@ -5,9 +5,9 @@ $title = 'Happy Pot Dashboard';
 global $dbc; 
 if (!isset($dbc)) {
     if (file_exists('connect.php')) {
-        require_once('connect.php');
+        include_once 'connect.php';
     } else if (file_exists('../connect.php')) { 
-        require_once('../connect.php');
+        include_once '../connect.php';
     } else {
         die("Error: Database connection file not found.");
     }
@@ -385,7 +385,8 @@ if (!in_array($filterCategory, $allowedCategories)) {
                                 $count = 0;
                                 while ($row = $result->fetch_assoc()) {
                                     if ($count % 4 == 0) { 
-                                        if ($count > 0) echo '</tr>'; 
+                                        if ($count > 0) { echo '</tr>';
+                                        } 
                                         echo '<tr>'; 
                                     }
                                     echo '<td>';
@@ -457,5 +458,6 @@ if (!in_array($filterCategory, $allowedCategories)) {
 </body>
 </html>
 <?php
-if(isset($dbc)) mysqli_close($dbc); 
+if(isset($dbc)) { mysqli_close($dbc);
+} 
 ?>

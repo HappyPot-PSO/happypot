@@ -6,7 +6,7 @@ if (!isset($_SESSION['user_id'])) {
     exit();
 }
 
-require_once('connect.php'); 
+require_once 'connect.php'; 
 
 $username_display = isset($_SESSION['username']) ? htmlspecialchars($_SESSION['username']) : 'User';
 $title = 'My Profile - Happy Pot';
@@ -427,7 +427,7 @@ $result_user_recipes = mysqli_stmt_get_result($stmt_user_recipes);
 
             <div class="profile-details-section">
                 <h2 class="content-title">Profile Details</h2>
-                <?php if ($user_data): ?>
+                <?php if ($user_data) : ?>
                     <div class="profile-info-item">
                         <strong>Email:</strong> <?php echo htmlspecialchars($user_data['email']); ?>
                     </div>
@@ -465,7 +465,8 @@ $result_user_recipes = mysqli_stmt_get_result($stmt_user_recipes);
                         $count = 0;
                         while ($recipe_row = mysqli_fetch_assoc($result_user_recipes)) {
                             if ($count % 4 == 0) { 
-                                if ($count > 0) echo '</tr>';
+                                if ($count > 0) { echo '</tr>';
+                                }
                                 echo '<tr>';
                             }
                             echo '<td>';
@@ -493,7 +494,8 @@ $result_user_recipes = mysqli_stmt_get_result($stmt_user_recipes);
                 } else {
                     echo '<p class="norec">Error fetching your recipes: ' . (isset($dbc) ? htmlspecialchars(mysqli_error($dbc)) : 'Database connection error') . '</p>';
                 }
-                if(isset($stmt_user_recipes)) mysqli_stmt_close($stmt_user_recipes);
+                if(isset($stmt_user_recipes)) { mysqli_stmt_close($stmt_user_recipes);
+                }
                 ?>
             </div>
             
@@ -570,5 +572,6 @@ $result_user_recipes = mysqli_stmt_get_result($stmt_user_recipes);
 </body>
 </html>
 <?php
-if(isset($dbc)) mysqli_close($dbc); 
+if(isset($dbc)) { mysqli_close($dbc);
+} 
 ?>
