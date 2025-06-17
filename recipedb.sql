@@ -34,6 +34,7 @@ CREATE TABLE IF NOT EXISTS `recipedb`.`recipe` (
   `idrec` INT(10) NOT NULL AUTO_INCREMENT,
   `title` VARCHAR(20) NOT NULL,
   `img` VARCHAR(100) NOT NULL,
+  `category` VARCHAR(50) NOT NULL DEFAULT 'food',
   `time` INT(3) NOT NULL,
   `ingredients` VARCHAR(500) NOT NULL,
   `instructions` VARCHAR(1000) NOT NULL,
