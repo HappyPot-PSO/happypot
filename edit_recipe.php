@@ -16,22 +16,50 @@ if (isset($_GET['id']) && filter_var($_GET['id'], FILTER_VALIDATE_INT)) {
     $recipe_id_to_edit = $_GET['id'];
     $current_user_id = $_SESSION['user_id'];
 
-    $query_fetch_recipe = "SELECT * FROM recipe WHERE idrec = ? AND user_id = ?";
+    // MODIFICATION 1: Add 'category' to the SELECT query
+    $query_fetch_recipe = "SELECT idrec, title, img, time, ingredients, instructions, category FROM recipe WHERE idrec = ? AND user_id = ?";
     $stmt_fetch = mysqli_prepare($dbc, $query_fetch_recipe);
-    mysqli_stmt_bind_param($stmt_fetch, "ii", $recipe_id_to_edit, $current_user_id);
-    mysqli_stmt_execute($stmt_fetch);
-    $result_fetch = mysqli_stmt_get_result($stmt_fetch);
-
-    if ($result_fetch && mysqli_num_rows($result_fetch) > 0) {
-        $recipe_data = mysqli_fetch_assoc($result_fetch);
-        $page_title = "Edit: " . htmlspecialchars($recipe_data['title']) . " - Happy Pot";
+    
+    if ($stmt_fetch === false) {
+        $error_message = "Database prepare error: " . $dbc->error;
     } else {
-        $error_message = "Recipe not found or you are not authorized to edit this recipe.";
-        $recipe_data = null;
+        mysqli_stmt_bind_param($stmt_fetch, "ii", $recipe_id_to_edit, $current_user_id);
+        mysqli_stmt_execute($stmt_fetch);
+        $result_fetch = mysqli_stmt_get_result($stmt_fetch);
+
+        if ($result_fetch && mysqli_num_rows($result_fetch) > 0) {
+            $recipe_data = mysqli_fetch_assoc($result_fetch);
+            $page_title = "Edit: " . htmlspecialchars($recipe_data['title']) . " - Happy Pot";
+        } else {
+            $error_message = "Recipe not found or you are not authorized to edit this recipe.";
+            $recipe_data = null;
+        }
+        mysqli_stmt_close($stmt_fetch);
     }
-    mysqli_stmt_close($stmt_fetch);
 } else {
     $error_message = "Invalid recipe ID provided for editing.";
+}
+
+// Handle SweetAlert messages from recipe_upload.php redirects
+$alert_script = '';
+if (isset($_SESSION['recipe_action_status']) && isset($_SESSION['recipe_action_type'])) {
+    $status_message = htmlspecialchars($_SESSION['recipe_action_status']);
+    $status_type = htmlspecialchars($_SESSION['recipe_action_type']);
+    
+    $alert_script = "<script>
+        document.addEventListener('DOMContentLoaded', function() {
+            if(typeof swal === 'function') {
+                swal({
+                    title: '" . ucfirst($status_type) . "!',
+                    text: '" . addslashes($status_message) . "',
+                    icon: '" . $status_type . "',
+                    button: 'OK'
+                });
+            }
+        });
+    </script>";
+    unset($_SESSION['recipe_action_status']);
+    unset($_SESSION['recipe_action_type']);
 }
 
 ?>
@@ -67,7 +95,7 @@ if (isset($_GET['id']) && filter_var($_GET['id'], FILTER_VALIDATE_INT)) {
             padding-left: 10px; color: #4dc9f7; font-size: 38px;
             font-weight: bold; margin: 0;
         }
-            .edit-recipe-header-nav {
+        .edit-recipe-header-nav {
             display: flex;
             align-items: center;
         }
@@ -75,7 +103,7 @@ if (isset($_GET['id']) && filter_var($_GET['id'], FILTER_VALIDATE_INT)) {
         .edit-recipe-header-nav .usermenu-greeting {
             font-weight: bold;
             color: #555;
-            margin-right: 15px; /* Memberi jarak ke elemen berikutnya (tombol Profile) */
+            margin-right: 15px; 
         }
         .edit-recipe-header-nav .username {
             color: #4dc9f7;
@@ -86,17 +114,12 @@ if (isset($_GET['id']) && filter_var($_GET['id'], FILTER_VALIDATE_INT)) {
             border: 1px solid #ccc; background-color: #e9e9e9; color: #333;
         }
 
-        /* Atur margin-left untuk setiap tombol .btn agar ada jarak dari elemen sebelumnya */
-        /* Ini akan berlaku untuk Profile dan Post a recipe */
         .edit-recipe-header-nav .btn {
-            margin-left: 15px; /* Jarak antara tombol Profile dan Post a recipe */
+            margin-left: 15px; 
         }
 
-        /* Berikan margin-left yang lebih besar pada form logout */
-        /* Ini akan memastikan jarak antara "Post a recipe" dan "Log-out" */
         .edit-recipe-header-nav form {
-            margin-left: 10px; /* Sesuaikan nilai ini (misal 20px, 25px, 30px) untuk jarak yang diinginkan */
-            /* Pastikan display:inline; tetap ada di HTML agar tidak memecah baris */
+            margin-left: 10px; 
         }
 
         .edit-recipe-header-nav .btn.btnhov:hover, .edit-recipe-header-nav .logoutbtn.btnhovel:hover {
@@ -175,13 +198,14 @@ if (isset($_GET['id']) && filter_var($_GET['id'], FILTER_VALIDATE_INT)) {
 
         /* SweetAlert custom styles for centering text */
         .swal-text {
-            text-align: center; /* Center the text */
-            margin-top: 15px; /* Add some margin for better spacing */
+            text-align: center; 
+            margin-top: 15px; 
             margin-bottom: 15px;
-            font-size: 16px; /* Adjust font size if needed */
+            font-size: 16px; 
         }
 
     </style>
+    <?php echo $alert_script; ?>
 </head>
 <body class="edit-recipe-page-body">
 
@@ -227,6 +251,16 @@ if (isset($_GET['id']) && filter_var($_GET['id'], FILTER_VALIDATE_INT)) {
                         <img src="<?php echo htmlspecialchars($recipe_data['img']); ?>" alt="Current Recipe Image" class="current-image-preview">
                         <input id="img" type="file" name="img" accept="image/*">
                     </p>
+                    
+                    <p>
+                        <label for="category">Category:</label>
+                        <select id="category" name="category" size="1" required>
+                            <option value="">Select Category</option>
+                            <option value="food" <?php echo ($recipe_data['category'] == 'food') ? 'selected' : ''; ?>>Food</option>
+                            <option value="drink" <?php echo ($recipe_data['category'] == 'drink') ? 'selected' : ''; ?>>Drink</option>
+                        </select>
+                    </p>
+                    
                     <p>
                         <label for="time">Prep time:</label>
                         <select id="time" name="time" size="1" required>
@@ -262,8 +296,8 @@ if (isset($_GET['id']) && filter_var($_GET['id'], FILTER_VALIDATE_INT)) {
                     </div>
                 </form>
             <?php else: ?>
-                 <p class="error-message-page">Could not load recipe data for editing.</p>
-                  <div style="text-align:center; margin-top:20px;">
+                   <p class="error-message-page">Could not load recipe data for editing.</p>
+                     <div style="text-align:center; margin-top:20px;">
                     <a href="profile.php" style="padding:10px 20px; background-color:#ddd; color:#333; text-decoration:none; border-radius:5px;">Go to Profile</a>
                 </div>
             <?php endif; ?>
@@ -304,18 +338,29 @@ if (isset($_GET['id']) && filter_var($_GET['id'], FILTER_VALIDATE_INT)) {
 
     const editRecipeForm = document.getElementById('editrecipeform');
     const updateRecipeButton = document.getElementById('updateRecipeButton');
-    const cancelEditButton = document.getElementById('cancelEditButton'); // Get the cancel button
+    const cancelEditButton = document.getElementById('cancelEditButton'); 
+    const errorElement = document.getElementById('error-edit-recipe'); // Get the error element
+
 
     if (updateRecipeButton && editRecipeForm) {
         updateRecipeButton.addEventListener('click', (e) => {
             let messages = [];
             const name = document.getElementById('name');
+            const category = document.getElementById('category'); // Get category element
             const time = document.getElementById('time');
             const ingr = document.getElementById('ingr-edit');
             const instr = document.getElementById('instr-edit');
 
-            if (!name.value.trim()) messages.push('Recipe name is required');
-            else if (name.value.length > 20) messages.push('Recipe name can\'t be longer than 20 characters');
+            if (!name.value.trim()) {
+                messages.push('Recipe name is required');
+            } else if (name.value.length > 20) { 
+                messages.push('Recipe name can\'t be longer than 20 characters');
+            }
+
+            // MODIFICATION 3: Add category validation
+            if (!category.value || category.value === '') {
+                messages.push('Category is required');
+            }
 
             if (!time.value || time.value === '') messages.push('Prep time is required');
 
@@ -326,13 +371,16 @@ if (isset($_GET['id']) && filter_var($_GET['id'], FILTER_VALIDATE_INT)) {
             else if (instr.value.length > 1000) messages.push('Instructions can\'t be longer than 1000 characters');
 
             if (messages.length > 0) {
+                // Display error messages using SweetAlert
                 swal({
                     title: 'Error!',
-                    text: messages.join('\n'),
+                    text: messages.join('\n'), // Join messages with newline
                     icon: 'error',
                     button: 'OK'
                 });
+                // No need to set errorElement.innerText and display: 'block' if using swal for all errors
             } else {
+                // If all validations pass, show confirmation for update
                 swal({
                     title: 'Confirm Update',
                     text: 'Are you sure you want to update this recipe?',
@@ -371,26 +419,26 @@ if (isset($_GET['id']) && filter_var($_GET['id'], FILTER_VALIDATE_INT)) {
                     },
                 },
                 dangerMode: true,
+            }).then((willCancel) => {
+                if (willCancel) {
+                    window.location.href = 'profile.php'; // Redirect to profile if confirmed
+                }
             });
         });
     }
 
     // Use a MutationObserver to apply text-align: center to the SweetAlert text
-    // This is a workaround because SweetAlert's default styling might override simple CSS
     const observer = new MutationObserver((mutationsList, observer) => {
         for (const mutation of mutationsList) {
             if (mutation.type === 'childList') {
                 const swalText = document.querySelector('.swal-text');
                 if (swalText) {
                     swalText.style.textAlign = 'center';
-                    // Disconnect observer after finding and styling the element to avoid unnecessary checks
-                    observer.disconnect();
+                    observer.disconnect(); // Disconnect after styling
                 }
             }
         }
     });
-
-    // Start observing the document body for changes
     observer.observe(document.body, { childList: true, subtree: true });
 
 </script>

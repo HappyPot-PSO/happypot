@@ -9,9 +9,17 @@ if (!isset($dbc)) {
     } else if (file_exists('../connect.php')) { 
         require_once('../connect.php');
     } else {
-        // Handle no connect.php found
+        die("Error: Database connection file not found.");
     }
 }
+
+$filterCategory = isset($_GET['category']) ? htmlspecialchars($_GET['category']) : 'all';
+
+$allowedCategories = ['all', 'food', 'drink']; 
+if (!in_array($filterCategory, $allowedCategories)) {
+    $filterCategory = 'all'; 
+}
+
 ?>
 <!DOCTYPE html>
 <html lang="en">
@@ -75,11 +83,10 @@ if (!isset($dbc)) {
             display: flex;
             align-items: center;
         }
-        /* --- PERUBAHAN TEMAN ANDA DIMULAI DI SINI --- */
         .dashboard-header-nav .usermenu-greeting {
             font-weight:bold;
             color:#555;
-            margin-right: 15px; /* Tambahkan margin kanan untuk usermenu-greeting */
+            margin-right: 15px; 
         }
         .dashboard-header-nav .username {
             color:#4dc9f7;
@@ -94,27 +101,20 @@ if (!isset($dbc)) {
             border: 1px solid #ccc;
             background-color: #e9e9e9;
             color: #333;
-            /* Hapus margin-left umum di sini jika Anda ingin mengontrol setiap tombol secara individu */
-            /* Margin-left yang sebelumnya di sini dipindahkan ke .dashboard-header-nav .btn */
         }
 
-        .dashboard-header-nav .btn { /* Aturan untuk semua tombol 'btn' */
-            margin-left: 15px; /* Jarak antara tombol umum */
+        .dashboard-header-nav .btn { 
+            margin-left: 15px; 
         }
-
-        /* Aturan khusus untuk tombol 'Post a recipe' untuk memberikan jarak ke logout */
-        /* Anda mungkin perlu menambahkan kelas pada tombol ini jika Anda punya banyak tombol 'btn' */
-        /* Atau bisa juga pakai selector yang lebih spesifik seperti ini */
+        
         .dashboard-header-nav button[onClick*='recipe.php'] {
-            margin-right: 10px; /* Atau sesuai keinginan Anda untuk jarak tambahan */
+            margin-right: 10px; 
         }
 
         .dashboard-header-nav .logoutbtn {
-            /* Tidak perlu margin-left tambahan di sini karena margin-right pada tombol sebelumnya sudah bekerja */
+            /* No extra margin-left here */
         }
-        /* --- PERUBAHAN TEMAN ANDA BERAKHIR DI SINI --- */
-
-
+        
         .dashboard-header-nav .btn.btnhov:hover, .dashboard-header-nav .logoutbtn.btnhovel:hover {
             background-color: #d0d0d0;
         }
@@ -124,8 +124,9 @@ if (!isset($dbc)) {
             flex-grow: 1; 
             width: 100%;
             display: flex; 
-            justify-content: center;
-            align-items: flex-start; 
+            flex-direction: column; 
+            justify-content: flex-start; 
+            align-items: center; 
             padding: 30px 15px; 
             box-sizing: border-box;
         }
@@ -138,6 +139,7 @@ if (!isset($dbc)) {
             width: 95%; 
             max-width: 1400px; 
             box-sizing: border-box;
+            /* Removed margin-top here as filters are now inside */
         }
 
         .dashboard-content-box .title { 
@@ -145,49 +147,43 @@ if (!isset($dbc)) {
             color: #4dc9f7;
             font-size: 2.2em; 
             margin-top: 0;
-            margin-bottom: 35px; 
+            margin-bottom: 15px; /* Reduced margin to bring filters closer */
         }
 
         .dashboard-content-box main { 
+            padding-top: 20px; /* Add padding to push table down from filters */
         }
         .dashboard-content-box table {
             width: 100%;
             border-collapse: collapse;
-            table-layout: fixed; /* Penting untuk lebar kolom yang konsisten */
+            table-layout: fixed; 
         }
         .dashboard-content-box td {
             text-align: center; 
             padding: 15px 10px; 
             vertical-align: top;
-            width: 25%; /* Untuk 4 kolom */
+            width: 25%; 
             box-sizing: border-box; 
         }
-
-        /* --- RASIO GAMBAR: Gaya untuk membuat gambar seragam dengan rasio aspek tetap --- */
         .image-wrapper {
-            position: relative; /* Penting untuk posisi absolut gambar */
+            position: relative; 
             width: 100%;
-            padding-bottom: 75%; /* Rasio aspek 4:3 (height is 75% of width). Sesuaikan ini! */
-                                 /* Untuk rasio 16:9, gunakan 56.25% */
-                                 /* Untuk rasio 1:1, gunakan 100% */
-            overflow: hidden; /* Sembunyikan bagian gambar yang terpotong */
+            padding-bottom: 75%; 
+            overflow: hidden; 
             border: 2px solid #f0f0f0; 
             border-radius: 10px;
-            margin: 0 auto 12px auto; /* Pusatkan wrapper dan beri margin bawah */
+            margin: 0 auto 12px auto; 
         }
 
         .dashboard-content-box .postimg { 
-            position: absolute; /* Gambar diposisikan absolut di dalam wrapper */
+            position: absolute; 
             top: 0;
             left: 0;
             width: 100%; 
-            height: 100%; /* Gambar mengisi seluruh ruang wrapper */
-            object-fit: cover; /* Ini yang membuat gambar di-crop agar muat */
+            height: 100%; 
+            object-fit: cover; 
             display: block; 
         }
-        /* --- AKHIR RASIO GAMBAR: Gaya untuk membuat gambar seragam --- */
-
-
         .dashboard-content-box .postitle { 
             font-size: 1.15em;
             font-weight: bold;
@@ -215,6 +211,15 @@ if (!isset($dbc)) {
             margin-bottom: 4px;
             line-height: 1.4;
         }
+        .dashboard-content-box td .recipe-category {
+            display: block;
+            font-size: 0.85em;
+            color: #555;
+            margin-top: 5px;
+            text-transform: capitalize;
+            font-weight: bold;
+        }
+
 
         .dashboard-content-box .norec { 
             text-align: center;
@@ -225,25 +230,86 @@ if (!isset($dbc)) {
 
         .swal-modal {border-radius: 10px;}
 
-        /* Media queries for responsiveness (untuk 4 kolom per baris) */
+        .category-filters {
+            display: flex;
+            justify-content: center;
+            gap: 15px;
+            margin-bottom: 20px;
+        }
+        .category-filters .filter-btn {
+            padding: 10px 20px;
+            border: 1px solid #ccc;
+            border-radius: 8px;
+            text-decoration: none;
+            color: #333;
+            background-color: #f9f9f9;
+            transition: background-color 0.2s ease, border-color 0.2s ease;
+            font-weight: 500;
+        }
+        .category-filters .filter-btn:hover {
+            background-color: #e0e0e0;
+            border-color: #b0b0b0;
+        }
+        .category-filters .filter-btn.active {
+            background-color: #4dc9f7;
+            color: white;
+            border-color: #4dc9f7;
+            font-weight: bold;
+        }
+        .category-filters .filter-btn.active:hover {
+            background-color: #36a2c9;
+            border-color: #36a2c9;
+        }
+
         @media (max-width: 1200px) {
             .dashboard-content-box td {
-                width: 33.33%; /* 3 kolom per baris */
+                width: 33.33%; 
             }
         }
 
         @media (max-width: 992px) {
             .dashboard-content-box td {
-                width: 50%; /* 2 kolom per baris */
+                width: 50%; 
             }
-            /* Tidak perlu menyesuaikan height image-container lagi karena pakai padding-bottom */
         }
 
         @media (max-width: 768px) {
-            .dashboard-content-box td {
-                width: 100%; /* 1 kolom per baris */
+            .dashboard-site-header {
+                flex-direction: column;
+                align-items: flex-start;
+                padding: 15px 20px;
             }
-            /* Tidak perlu menyesuaikan height image-container lagi karena pakai padding-bottom */
+            .dashboard-header-nav {
+                flex-direction: column;
+                align-items: flex-start;
+                margin-top: 15px;
+                width: 100%;
+            }
+            .dashboard-header-nav .usermenu-greeting {
+                margin-right: 0;
+                margin-bottom: 10px;
+            }
+            .dashboard-header-nav .btn, .dashboard-header-nav .logoutbtn {
+                width: calc(100% - 20px); 
+                margin-left: 0;
+                margin-bottom: 10px;
+                text-align: center;
+            }
+            .dashboard-header-nav button[onClick*='recipe.php'] {
+                margin-right: 0; 
+            }
+
+            .dashboard-content-box td {
+                width: 100%; 
+            }
+            .category-filters {
+                flex-direction: column;
+                gap: 10px;
+            }
+            .category-filters .filter-btn {
+                width: 100%;
+                text-align: center;
+            }
         }
     </style>
 </head>
@@ -256,12 +322,10 @@ if (!isset($dbc)) {
         <div class="dashboard-header-nav">
             <?php
             if (isset($_SESSION['username'])) {
-                // Perubahan HTML: Menambahkan elemen div untuk usermenu-greeting jika belum ada
                 echo '<div class="usermenu-greeting">Welcome, <span class="username">' . htmlspecialchars($_SESSION['username']) . '!</span></div>';
             }
-            // Tambahkan kelas spesifik atau selector yang konsisten jika perlu untuk tombol "Post a recipe"
             echo '<button class="btn btnhov" type="button" onClick="location.href=\'profile.php\'">Profile</button>';
-            echo '<button class="btn btnhov post-recipe-btn" type="button" onClick="location.href=\'recipe.php\'">Post a recipe</button>'; /* Added class for specific styling */
+            echo '<button class="btn btnhov post-recipe-btn" type="button" onClick="location.href=\'recipe.php\'">Post a recipe</button>'; 
             echo '<button class="logoutbtn btnhovel" type="button" id="logoutConfirmBtn">Log-out</button>';
             ?>
         </div>
@@ -271,6 +335,12 @@ if (!isset($dbc)) {
         <div class="dashboard-content-box">
             
             <h1 class="title">Recipes</h1>
+            <div class="category-filters">
+                <a href="?category=all" class="filter-btn <?php echo ($filterCategory == 'all' ? 'active' : ''); ?>">All</a>
+                <a href="?category=food" class="filter-btn <?php echo ($filterCategory == 'food' ? 'active' : ''); ?>">Food</a>
+                <a href="?category=drink" class="filter-btn <?php echo ($filterCategory == 'drink' ? 'active' : ''); ?>">Drink</a>
+            </div>
+
             <main>
                 <?php
                 if (isset($_SESSION["post_success"]) && $_SESSION["post_success"]) {
@@ -285,48 +355,67 @@ if (!isset($dbc)) {
                 }
 
                 if (isset($dbc)) {
-                    $query = "SELECT r.idrec, r.title, r.img, r.time, u.fname, u.lname FROM recipe r JOIN user u ON r.user_id = u.id ORDER BY r.idrec DESC"; 
-                    $result = mysqli_query($dbc, $query);
+                    $query = "SELECT r.idrec, r.title, r.img, r.time, r.category, u.fname, u.lname 
+                              FROM recipe r 
+                              JOIN user u ON r.user_id = u.id";
+                    
+                    if ($filterCategory !== 'all') {
+                        $query .= " WHERE r.category = ?";
+                    }
+                    
+                    $query .= " ORDER BY r.idrec DESC"; 
 
-                    if ($result) {
-                        if (mysqli_num_rows($result) == 0) {
-                            echo '<p class="norec">No recipes posted yet. Be the first one to post!</p>';
-                        } else {
-                            echo '<table>';
-                            $count = 0;
-                            while ($row = mysqli_fetch_assoc($result)) {
-                                // PHP untuk menentukan kapan memulai baris baru
-                                if ($count % 4 == 0) { 
-                                    if ($count > 0) echo '</tr>'; // Tutup baris sebelumnya jika bukan yang pertama
-                                    echo '<tr>'; // Mulai baris baru
-                                }
-                                echo '<td>';
-                                // Struktur HTML baru untuk gambar dengan container
-                                echo '<div class="image-wrapper">'; // Ubah nama kelas menjadi image-wrapper
-                                echo '<a href="display.php?id=' . $row['idrec'] . '"><img class="postimg" src="' . htmlspecialchars($row['img']) . '" alt="' . htmlspecialchars($row['title']) . '"></a>';
-                                echo '</div>'; // Tutup image-wrapper
-                                echo '<a href="display.php?id=' . $row['idrec'] . '" class="postitle">' . htmlspecialchars($row['title']) . '</a>'; 
-                                echo '<span class="recipe-detail"><i class="fa-regular fa-clock"></i> ' . htmlspecialchars($row['time']) . ' mins</span>'; 
-                                echo '<span class="recipe-detail">By ' . htmlspecialchars($row['fname']) . ' ' . htmlspecialchars($row['lname']) . '</span>'; 
-                                echo '</td>';
+                    $stmt = $dbc->prepare($query);
 
-                                $count++;
-                            }
-                            // Isi sel kosong di baris terakhir jika tidak genap 4
-                            if ($count % 4 != 0) {
-                                while ($count % 4 != 0) {
-                                    echo '<td></td>'; 
+                    if ($stmt === false) {
+                        echo '<p class="norec">Error preparing statement: ' . htmlspecialchars($dbc->error) . '</p>';
+                    } else {
+                        if ($filterCategory !== 'all') {
+                            $stmt->bind_param("s", $filterCategory);
+                        }
+                        
+                        $stmt->execute();
+                        $result = $stmt->get_result();
+
+                        if ($result) {
+                            if ($result->num_rows == 0) {
+                                echo '<p class="norec">No recipes found in this category yet.</p>';
+                            } else {
+                                echo '<table>';
+                                $count = 0;
+                                while ($row = $result->fetch_assoc()) {
+                                    if ($count % 4 == 0) { 
+                                        if ($count > 0) echo '</tr>'; 
+                                        echo '<tr>'; 
+                                    }
+                                    echo '<td>';
+                                    echo '<div class="image-wrapper">'; 
+                                    echo '<a href="display.php?id=' . $row['idrec'] . '"><img class="postimg" src="' . htmlspecialchars($row['img']) . '" alt="' . htmlspecialchars($row['title']) . '"></a>';
+                                    echo '</div>'; 
+                                    echo '<a href="display.php?id=' . $row['idrec'] . '" class="postitle">' . htmlspecialchars($row['title']) . '</a>'; 
+                                    echo '<span class="recipe-detail"><i class="fa-regular fa-clock"></i> ' . htmlspecialchars($row['time']) . ' mins</span>'; 
+                                    echo '<span class="recipe-detail">By ' . htmlspecialchars($row['fname']) . ' ' . htmlspecialchars($row['lname']) . '</span>'; 
+                                    echo '</td>';
+
                                     $count++;
                                 }
+                                if ($count % 4 != 0) {
+                                    while ($count % 4 != 0) {
+                                        echo '<td></td>'; 
+                                        $count++;
+                                    }
+                                }
+                                echo '</tr>'; 
+                                echo '</table>';
                             }
-                            echo '</tr>'; // Tutup baris terakhir
-                            echo '</table>';
+                            $result->free(); 
+                        } else {
+                            echo '<p class="norec">Error fetching recipes: ' . htmlspecialchars($dbc->error) . '</p>';
                         }
-                    } else {
-                        echo '<p class="norec">Error fetching recipes: ' . mysqli_error($dbc) . '</p>';
+                        $stmt->close();
                     }
                 } else {
-                     echo "<p class='norec'>Database connection not available.</p>";
+                    echo "<p class='norec'>Database connection not available.</p>";
                 }
                 ?>
             </main>
@@ -335,7 +424,6 @@ if (!isset($dbc)) {
     </div>
     <script>
         document.addEventListener('DOMContentLoaded', function() {
-            // SweetAlert for Logout Confirmation
             document.getElementById('logoutConfirmBtn').addEventListener('click', function(e) {
                 e.preventDefault(); 
 
