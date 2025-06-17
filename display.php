@@ -15,20 +15,27 @@ if (isset($_GET['id']) && filter_var($_GET['id'], FILTER_VALIDATE_INT)) {
 }
 
 if (isset($_POST['submit_comment']) && isset($_SESSION['user_id']) && $recipeId_from_url) {
-    $recipeId_safe_for_comment_action = mysqli_real_escape_string($dbc, $recipeId_from_url);
-    $comment_text = mysqli_real_escape_string($dbc, $_POST['comment']);
+    $recipeId_safe_for_comment_action = $recipeId_from_url; 
+    $comment_text = $_POST['comment']; 
     $session_user_id = $_SESSION['user_id'];
 
     if (!empty(trim($comment_text))) {
-        $insert_comment_query = "INSERT INTO comment (comm, recipe_idrec, user_id) VALUES ('$comment_text', '$recipeId_safe_for_comment_action', '$session_user_id')";
-        $insert_comment_result = mysqli_query($dbc, $insert_comment_query);
-        if ($insert_comment_result) {
-            $_SESSION['recipe_action_status'] = "Your comment has been posted successfully!";
-            $_SESSION['recipe_action_type'] = "success";
-            header("Location: display.php?id=$recipeId_safe_for_comment_action&action=comment_posted#comments-section");
-            exit();
+        $stmt_insert_comment = $dbc->prepare("INSERT INTO comment (comm, recipe_idrec, user_id) VALUES (?, ?, ?)");
+        
+        if ($stmt_insert_comment === false) {
+            $comment_submission_error = "Database prepare error for comment insertion: " . $dbc->error;
         } else {
-            $comment_submission_error = "Error submitting comment: " . mysqli_error($dbc);
+            $stmt_insert_comment->bind_param("sii", $comment_text, $recipeId_safe_for_comment_action, $session_user_id);
+
+            if ($stmt_insert_comment->execute()) {
+                $_SESSION['recipe_action_status'] = "Your comment has been posted successfully!";
+                $_SESSION['recipe_action_type'] = "success";
+                header("Location: display.php?id=$recipeId_safe_for_comment_action&action=comment_posted#comments-section");
+                exit();
+            } else {
+                $comment_submission_error = "Error submitting comment: " . $stmt_insert_comment->error;
+            }
+            $stmt_insert_comment->close();
         }
     } else {
         $comment_submission_error = "Comment cannot be empty.";
@@ -69,37 +76,70 @@ if (isset($_GET['action']) && isset($_SESSION['recipe_action_status']) && isset(
 }
 
 if ($recipeId_from_url) {
-    $recipeId_safe = mysqli_real_escape_string($dbc, $recipeId_from_url); 
-
-    $query_recipe = "SELECT idrec, title, img, time, user_id, instructions, ingredients FROM recipe WHERE idrec = '$recipeId_safe'";
-    $result_recipe = mysqli_query($dbc, $query_recipe);
-
-    if ($result_recipe && mysqli_num_rows($result_recipe) > 0) {
-        $recipe_details = mysqli_fetch_assoc($result_recipe);
-        $page_title_text = htmlspecialchars($recipe_details['title']) . ' - Happy Pot';
-
-        $userIdFromRecipe = mysqli_real_escape_string($dbc, $recipe_details['user_id']);
-        $query_user = "SELECT fname, lname FROM user WHERE id = '$userIdFromRecipe'";
-        $result_user = mysqli_query($dbc, $query_user);
-        $recipe_user_details = ($result_user && mysqli_num_rows($result_user) > 0) ? mysqli_fetch_assoc($result_user) : ['fname' => 'Unknown', 'lname' => 'User'];
-
-        $query_comments = "SELECT comm, user_id FROM comment WHERE recipe_idrec = '$recipeId_safe' ORDER BY idcomment DESC";
-        $result_comments = mysqli_query($dbc, $query_comments);
-        if ($result_comments) {
-            while ($comment_row = mysqli_fetch_assoc($result_comments)) {
-                $commentUserId = mysqli_real_escape_string($dbc, $comment_row['user_id']);
-                $commentUserQuery = "SELECT fname, lname FROM user WHERE id = '$commentUserId'";
-                $commentUserResult = mysqli_query($dbc, $commentUserQuery);
-                $commentAuthorDetails = ($commentUserResult && mysqli_num_rows($commentUserResult) > 0) ? mysqli_fetch_assoc($commentUserResult) : ['fname' => 'User', 'lname' => ''];
-                $comments_data[] = [
-                    'author_fname' => $commentAuthorDetails['fname'],
-                    'author_lname' => $commentAuthorDetails['lname'],
-                    'comment_text' => $comment_row['comm']
-                ];
-            }
-        }
+    $query_recipe = "SELECT idrec, title, img, time, user_id, instructions, ingredients, category FROM recipe WHERE idrec = ?";
+    $stmt_recipe = $dbc->prepare($query_recipe);
+    if ($stmt_recipe === false) {
+        $page_title_text = "Database prepare error: " . $dbc->error;
+        $recipe_details = null;
     } else {
-        $page_title_text = 'Recipe Not Found - Happy Pot';
+        $stmt_recipe->bind_param("i", $recipeId_from_url);
+        $stmt_recipe->execute();
+        $result_recipe = $stmt_recipe->get_result();
+
+        if ($result_recipe && $result_recipe->num_rows > 0) {
+            $recipe_details = $result_recipe->fetch_assoc();
+            $page_title_text = htmlspecialchars($recipe_details['title']) . ' - Happy Pot';
+            $recipe_category_display = $recipe_details['category'];
+            $userIdFromRecipe = $recipe_details['user_id'];
+            $query_user = "SELECT fname, lname FROM user WHERE id = ?";
+            $stmt_user = $dbc->prepare($query_user);
+            if ($stmt_user === false) {
+                $recipe_user_details = ['fname' => 'Unknown', 'lname' => 'User (DB Error)'];
+            } else {
+                $stmt_user->bind_param("i", $userIdFromRecipe);
+                $stmt_user->execute();
+                $result_user = $stmt_user->get_result();
+                $recipe_user_details = ($result_user && $result_user->num_rows > 0) ? $result_user->fetch_assoc() : ['fname' => 'Unknown', 'lname' => 'User'];
+                $stmt_user->close();
+            }
+
+            $query_comments = "SELECT comm, user_id FROM comment WHERE recipe_idrec = ? ORDER BY idcomment DESC";
+            $stmt_comments = $dbc->prepare($query_comments);
+            if ($stmt_comments === false) {
+                $comments_data = [];
+            } else {
+                $stmt_comments->bind_param("i", $recipeId_from_url);
+                $stmt_comments->execute();
+                $result_comments = $stmt_comments->get_result();
+                
+                if ($result_comments) {
+                    while ($comment_row = $result_comments->fetch_assoc()) {
+                        $commentUserId = $comment_row['user_id'];
+                        $commentUserQuery = "SELECT fname, lname FROM user WHERE id = ?";
+                        $stmt_comment_user = $dbc->prepare($commentUserQuery);
+                        if ($stmt_comment_user === false) {
+                            $commentAuthorDetails = ['fname' => 'User', 'lname' => '(DB Error)']; 
+                        } else {
+                            $stmt_comment_user->bind_param("i", $commentUserId);
+                            $stmt_comment_user->execute();
+                            $commentUserResult = $stmt_comment_user->get_result();
+                            $commentAuthorDetails = ($commentUserResult && $commentUserResult->num_rows > 0) ? $commentUserResult->fetch_assoc() : ['fname' => 'User', 'lname' => ''];
+                            $stmt_comment_user->close();
+                        }
+
+                        $comments_data[] = [
+                            'author_fname' => $commentAuthorDetails['fname'],
+                            'author_lname' => $commentAuthorDetails['lname'],
+                            'comment_text' => $comment_row['comm']
+                        ];
+                    }
+                }
+                $stmt_comments->close();
+            }
+        } else {
+            $page_title_text = 'Recipe Not Found - Happy Pot';
+        }
+        $stmt_recipe->close();
     }
 } else {
     if (empty($alert_script)) { 
@@ -185,6 +225,13 @@ if ($recipeId_from_url) {
         }
         .recipe-meta .fa-clock { margin-right: 5px; }
         .recipe-meta span.author-name { margin-left: 10px; padding-left:10px; border-left:1px solid #ddd; }
+        /* Added style for category */
+        .recipe-meta span.recipe-category { 
+            margin-left: 10px; 
+            padding-left:10px; 
+            border-left:1px solid #ddd; 
+            text-transform: capitalize; /* Make it look nicer */
+        }
         .recipe-section { margin-bottom: 25px; }
         .recipe-section h3 {
             font-size: 1.3em; color: #4dc9f7; margin-bottom: 10px;
@@ -226,7 +273,7 @@ if ($recipeId_from_url) {
             .recipe-image-column { margin-bottom: 20px; }
             .recipe-title-main, .recipe-meta { text-align:center; } 
         }
-         .error-page-message { 
+        .error-page-message { 
             text-align:center; font-size:1.2em; color:red; width:100%; padding: 20px 0;
         }
     </style>
@@ -269,8 +316,15 @@ if ($recipeId_from_url) {
                     <div class="recipe-meta">
                         <i class="fa-regular fa-clock"></i> <?php echo htmlspecialchars($recipe_details['time']); ?> mins
                         <span class="author-name">
-                           By: <?php echo htmlspecialchars($recipe_user_details['fname']) . ' ' . htmlspecialchars($recipe_user_details['lname']); ?>
+                            By: <?php echo htmlspecialchars($recipe_user_details['fname']) . ' ' . htmlspecialchars($recipe_user_details['lname']); ?>
                         </span>
+                        <?php 
+                        if (!empty($recipe_category_display)): 
+                        ?>
+                            <span class="recipe-category">
+                                Category: <?php echo htmlspecialchars($recipe_category_display); ?>
+                            </span>
+                        <?php endif; ?>
                     </div>
 
                     <div class="recipe-section ingredients-section">
@@ -324,12 +378,12 @@ if ($recipeId_from_url) {
 
             <?php elseif ($recipeId_from_url): ?>
                 <p class="error-page-message">Error: Recipe not found.</p>
-                 <div class="back-button-container">
+                   <div class="back-button-container">
                     <a href="dashboard.php" class="back-button">Go Back to Recipes</a>
                 </div>
             <?php else: ?>
                 <p class="error-page-message">Error: Recipe ID not provided.</p>
-                 <div class="back-button-container">
+                   <div class="back-button-container">
                     <a href="dashboard.php" class="back-button">Go Back to Recipes</a>
                 </div>
             <?php endif; ?>
@@ -353,7 +407,7 @@ if ($recipeId_from_url) {
         if(commentTextarea.value.length > 0){ 
             charCountSpan.textContent = commentTextarea.value.length;
         } else {
-             charCountSpan.textContent = '0';
+            charCountSpan.textContent = '0';
         }
     }
 </script>
