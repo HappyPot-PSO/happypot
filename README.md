@@ -23,7 +23,7 @@ Untuk menjalankan proyek ini secara lokal, Anda memerlukan:
 Ikuti langkah-langkah berikut untuk menjalankan aplikasi secara lokal menggunakan Docker:
 
 1. Clone Repository
-Pertama, klon repositori proyek ke mesin lokal Anda dan masuk ke direktorinya:
+Pertama, clone repositori proyek ke mesin lokal Anda dan masuk ke direktorinya:
 ``` bash
 git clone https://github.com/HappyPot-PSO/happypot.git
 cd happypot
