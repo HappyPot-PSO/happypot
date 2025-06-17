@@ -42,7 +42,7 @@ class RecipeTest extends TestCase
         $stmt->method('get_result')
             ->willReturn($result);
 
-        $this->db->method('prepare')
+        $this->dbc->method('prepare')
             ->willReturn($stmt);
 
         // Create test recipe
@@ -86,7 +86,7 @@ class RecipeTest extends TestCase
         $stmt->method('get_result')
             ->willReturn($result);
 
-        $this->db->method('prepare')
+        $this->dbc->method('prepare')
             ->willReturn($stmt);
 
         // Update recipe
@@ -126,7 +126,7 @@ class RecipeTest extends TestCase
         $stmt->method('get_result')
             ->willReturn($result);
 
-        $this->db->method('prepare')
+        $this->dbc->method('prepare')
             ->willReturn($stmt);
 
         // Store the result before any potential cleanup
@@ -186,7 +186,7 @@ class RecipeTest extends TestCase
         $stmt->method('get_result')
             ->willReturn($result);
 
-        $this->db->method('prepare')
+        $this->dbc->method('prepare')
             ->willReturn($stmt);
 
         // Get user's recipes
@@ -234,7 +234,7 @@ class RecipeTest extends TestCase
         $stmt->method('get_result')
             ->willReturn($result);
 
-        $this->db->method('prepare')
+        $this->dbc->method('prepare')
             ->willReturn($stmt);
 
         // Search for recipes containing 'Chicken'

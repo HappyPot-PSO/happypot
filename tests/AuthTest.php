@@ -52,7 +52,7 @@ class AuthTest extends \Tests\TestCase
         $stmt->method('get_result')
             ->willReturn($result);
 
-        $this->db->method('prepare')
+        $this->dbc->method('prepare')
             ->willReturn($stmt);
 
         // Verify the user can login
@@ -90,7 +90,7 @@ class AuthTest extends \Tests\TestCase
         $stmt->method('get_result')
             ->willReturn($result);
 
-        $this->db->method('prepare')
+        $this->dbc->method('prepare')
             ->willReturn($stmt);
 
         // Verify incorrect password doesn't work
