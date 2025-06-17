@@ -1,7 +1,7 @@
 <?php
 
 include('sanitizeInput.php'); 
-include('connect.php');      
+include('connect.php');
 session_start();
 
 if (!isset($_SESSION['user_id'])) {
@@ -16,9 +16,10 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     $ingredients = isset($_POST["ingredients"]) ? sanitizeInput($_POST["ingredients"]) : '';
     $instructions = isset($_POST["instructions"]) ? sanitizeInput($_POST["instructions"]) : '';
     $userId = $_SESSION['user_id']; 
+    $category = isset($_POST["category"]) ? sanitizeInput($_POST["category"]) : '';
 
-    if (empty($name) || empty($prepTime) || empty($ingredients) || empty($instructions)) {
-        $_SESSION['recipe_action_status'] = "All fields are required.";
+    if (empty($name) || empty($prepTime) || empty($ingredients) || empty($instructions) || empty($category)) {
+        $_SESSION['recipe_action_status'] = "All fields, including category, are required.";
         $_SESSION['recipe_action_type'] = "error";
         if (isset($_POST['action']) && $_POST['action'] == 'update_recipe' && isset($_POST['recipe_id'])) {
             header("Location: edit_recipe.php?id=" . $_POST['recipe_id']);
@@ -28,10 +29,11 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
         exit();
     }
 
+    $max_title_length_db = 20;
 
     $imagePath = null; 
     $is_update_action = (isset($_POST['action']) && $_POST['action'] == 'update_recipe' && isset($_POST['recipe_id']) && !empty($_POST['recipe_id']));
-    
+
     if ($is_update_action) {
         $recipe_id_to_update = (int)$_POST['recipe_id'];
         if (isset($_POST['existing_image']) && !empty(trim($_POST['existing_image']))) {
@@ -52,7 +54,6 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
                 } else {
                 }
             }
-
             $newImageName = uniqid('recipe_', true) . "." . $extension; 
             $newImagePath = "postimages/" . $newImageName; 
 
@@ -85,6 +86,19 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
             exit();
         }
     }
+    $combined_name = $name . " :: Category:" . $category;
+
+    if (strlen($combined_name) > $max_title_length_db) {
+        $category_suffix = " :: Category:" . $category;
+        $available_length_for_name = $max_title_length_db - strlen($category_suffix);
+        if ($available_length_for_name < 0) {
+
+            $combined_name = substr($combined_name, 0, $max_title_length_db);
+        } else {
+            $truncated_name = substr($name, 0, $available_length_for_name);
+            $combined_name = $truncated_name . $category_suffix;
+        }
+    }
 
     try {
         if ($is_update_action) {
@@ -95,9 +109,9 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
             $result_check_update = mysqli_stmt_get_result($stmt_check_update);
 
             if (mysqli_num_rows($result_check_update) == 1) {
-                $sql_update = "UPDATE recipe SET title=?, img=?, time=?, ingredients=?, instructions=? WHERE idrec=? AND user_id=?";
+                $sql_update = "UPDATE recipe SET title=?, img=?, time=?, ingredients=?, instructions=?, category=? WHERE idrec=? AND user_id=?";
                 $stmt_update = $dbc->prepare($sql_update);
-                $stmt_update->bind_param("ssisssi", $name, $imagePath, $prepTime, $ingredients, $instructions, $recipe_id_to_update, $userId);
+                $stmt_update->bind_param("ssisssii", $name, $imagePath, $prepTime, $ingredients, $instructions, $category, $recipe_id_to_update, $userId);
                 
                 if ($stmt_update->execute()) {
                     $_SESSION["recipe_action_status"] = "Recipe updated successfully!";
@@ -120,10 +134,10 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
             mysqli_stmt_close($stmt_check_update);
 
         } else {
-            $sql_insert = "INSERT INTO recipe (title, img, time, ingredients, instructions, user_id) VALUES (?, ?, ?, ?, ?, ?)";
+            $sql_insert = "INSERT INTO recipe (title, img, time, ingredients, instructions, user_id, category) VALUES (?, ?, ?, ?, ?, ?, ?)";
             $stmt_insert = $dbc->prepare($sql_insert);
-            $stmt_insert->bind_param("ssisss", $name, $imagePath, $prepTime, $ingredients, $instructions, $userId);
-            
+            $stmt_insert->bind_param("ssisssi", $name, $imagePath, $prepTime, $ingredients, $instructions, $userId, $category); 
+
             if ($stmt_insert->execute()) {
                 $new_recipe_id = $stmt_insert->insert_id;
                 $_SESSION['recipe_action_status'] = "Recipe posted successfully!"; 

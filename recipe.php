@@ -240,6 +240,14 @@ $username_display = isset($_SESSION['username']) ? htmlspecialchars($_SESSION['u
                     <input id="img" type="file" name="img" accept="image/*" required>
                 </p>
                 <p>
+                    <label for="category">Category:</label>
+                    <select id="category" name="category" size="1" required>
+                        <option selected value="">Select Category</option>
+                        <option value="food">Food</option>
+                        <option value="drink">Drink</option>
+                    </select>
+                </p>
+                <p>
                     <label for="time">Prep time:</label>
                     <select id="time" name="time" size="1" required>
                         <option selected value="">Pick Time</option> 
@@ -318,6 +326,7 @@ $username_display = isset($_SESSION['username']) ? htmlspecialchars($_SESSION['u
             let messages = [];
             const name = document.getElementById('name');
             const img = document.getElementById('img');
+            const category = document.getElementById('category');
             const time = document.getElementById('time');
             const ingr = document.getElementById('ingr');
             const instr = document.getElementById('instr');
@@ -332,7 +341,11 @@ $username_display = isset($_SESSION['username']) ? htmlspecialchars($_SESSION['u
                 messages.push('Recipe image is required');
             }
 
-            if (!time.value || time.value === 'epilogi' || time.value === '') { // Changed 'epilogi' to a more robust check if needed
+            if (!category.value || category.value === '') {
+                messages.push('Category is required');
+            }
+
+            if (!time.value || time.value === 'epilogi' || time.value === '') { 
                 messages.push('Prep time is required');
             }
 
