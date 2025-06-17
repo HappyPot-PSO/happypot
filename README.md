@@ -5,15 +5,27 @@ Happy Pot adalah aplikasi web yang berfungsi sebagai platform bagi penggemar mak
 
 Fitur Utama:
 - Recipe Browsing: Menjelajahi berbagai resep dengan instruksi dan bahan terperinci.
+    ![Happy Pot DB](docs/images/dashboard.png)
 - User Registration and Login: Autentikasi pengguna yang aman untuk interaksi yang dipersonalisasi.
+    ![Happy Pot Login](docs/images/login.png)
+    ![Happy Pot Register](docs/images/register.png)
 - Upload Recipe: Pengguna dapat mengunggah resep mereka sendiri ke situs web.
+    ![Happy Pot Post](docs/images/post.png)
 - Commenting System: Menulis dan membaca komentar pada resep untuk berbagi tips dan umpan balik.
+    ![Happy Pot Comment](docs/images/comment.png)
 
 # 💻 Teknologi yang Digunakan
 - Frontend: HTML, CSS, JavaScript
 - Backend: PHP
 - Database: MySQL (dikelola melalui Google Cloud SQL di lingkungan produksi)
 - Web Server: Apache (terkonfigurasi dalam Docker)
+- Version Control: GitHub 
+- Containerization: Docker 
+- Cloud Provider: Google Cloud Platform (GCP) 
+- Container Orchestrator: Cloud Run 
+- CI/CD: GitHub Actions 
+- Testing: PHPUnit 
+- Monitoring: Cloud Run
 
 # ⚙️ Requirements
 Untuk menjalankan proyek ini secara lokal, Anda memerlukan:
