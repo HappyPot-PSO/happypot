@@ -1,6 +1,5 @@
-<!-- Post a Recipe Form -->
 <div class="recipeform">
-  <h2 class="underline2">Post a new recipe!</h2><br>
+  <h2 class="underline2">Post a new recipe!</h2>
   <div id="error"></div>
   <form id="recipeform" method="POST" action="recipe_upload.php" enctype="multipart/form-data">
     <p>Recipe name:<input id="name" class="recipebox" type="text" name="name"></p>
@@ -15,17 +14,22 @@
       <option value="60">60 min</option>
       <option value="90">90 min</option>
       <option value="120">120 min</option>
-    </select></p><br><br>
+    </select></p>
+
     <p>Ingredients:</p>
     <textarea id="ingr" class="txtarea" name="ingredients" cols="100" rows="5"></textarea>
-    <p id="ingr-counter"></p><br><br>
+    <p id="ingr-counter"></p>
+
     <p>Instructions:</p>
     <textarea id="instr" class="txtarea" name="instructions" cols="100" rows="10"></textarea>
-    <p id="instr-counter"></p><br><br>
-    <!-- Add the user ID as a hidden input field -->
+    <p id="instr-counter"></p>
+
     <input type="hidden" name="user_id" value="<?php echo $_SESSION['user_id']; ?>">
-    <input id="recipost" class="postbtn btnhov" type="submit" name="post" value="Post Recipe">
-    <button class="cancelbtn btnhovcl" type="button" onClick="location.href='index.php'" name="cancel">Cancel</button>
+
+    <div class="button-group">
+        <button class="cancelbtn btnhovcl" type="button" onClick="location.href='index.php'" name="cancel">Cancel</button>
+        <input id="recipost" class="postbtn btnhov" type="submit" name="post" value="Post Recipe">
+    </div>
   </form>
 </div>
 
