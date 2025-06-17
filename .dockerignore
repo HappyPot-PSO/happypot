@@ -7,3 +7,5 @@
 *.mwb.bak
 postimages/*
 !postimages/.gitkeep
+docs/*
+!docs/.gitkeep
