@@ -13,6 +13,11 @@ Fitur Utama:
     ![Happy Pot Post](docs/images/post.png)
 - Commenting System: Menulis dan membaca komentar pada resep untuk berbagi tips dan umpan balik.
     ![Happy Pot Comment](docs/images/comment.png)
+- Profile User: Melihat dan mengedit profile serta melakukan perubahan atau menghapus resep yang sudah dibuat.
+    ![Happy Pot Profile](docs/images/profile.png)
+- Filter Recipe: Memfilter resep sesuai category yang dipilih (food/drink)
+    ![Happy Pot Profile](docs/images/filter.png)
+
 
 # 💻 Teknologi yang Digunakan
 - Frontend: HTML, CSS, JavaScript
@@ -116,9 +121,11 @@ git push origin nama-fitur-baru-anda
 
 4. Buat Pull Request
 Buka GitHub dan buat Pull Request (PR) dari branch baru Anda ```(nama-fitur-baru-anda)``` ke branch ```main```. Berikan deskripsi yang jelas tentang fitur yang Anda tambahkan.
+![Happy Pot PR](docs/images/pr.png)
 
 5. Review Kode & Merge:
 Setelah code review selesai dan disetujui, PR Anda akan digabungkan ke branch ```main```. Penggabungan ke main akan secara otomatis memicu _pipeline Continuous Deployment (CD)_ untuk _deploy _perubahan.
+![Happy Pot MPR](docs/images/mpr.png)
 
 # 🌐 Public URL 
 Anda dapat mengakses aplikasi melalui URL publik berikut:
