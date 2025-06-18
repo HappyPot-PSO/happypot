@@ -48,7 +48,7 @@ jobs:
     - name: PHP Code Sniffer
       continue-on-error: true
       run: |
-        ./vendor/bin/phpcs --standard=PSR12 --extensions=php --ignore="vendor/*" .
+        ./vendor/bin/phpcs --standard=PSR12 --extensions=php --ignore="vendor/*" . 
 
     - name: PHP Mess Detector
       continue-on-error: true
