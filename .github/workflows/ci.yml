@@ -6,8 +6,8 @@ on:
 
 env:
   PROJECT_ID: ${{ secrets.GCP_PROJECT_ID }}
-  SERVICE_NAME: recipe-website
-  REGION: asia-southeast1
+  SERVICE_NAME: happypot
+  REGION: asia-southeast2
 
 jobs:
   test:
@@ -54,3 +54,8 @@ jobs:
       continue-on-error: true
       run: |
         ./vendor/bin/phpmd . text cleancode,codesize,design,naming --exclude vendor/
+      
+    - name: Build Docker image
+      run: |
+        docker build -t asia-southeast2-docker.pkg.dev/${{ secrets.PROJECT_ID }}/${{ env.SERVICE_NAME }}/${{ env.SERVICE_NAME }}:${{ steps.vars.outputs.short_sha }} .
+        docker image ls
