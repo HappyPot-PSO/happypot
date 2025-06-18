@@ -1,4 +1,4 @@
-<!-- <?php
+<?php
 session_start();
 
 if (!isset($_SESSION['user_id'])) {
@@ -577,4 +577,4 @@ $result_user_recipes = mysqli_stmt_get_result($stmt_user_recipes);
 if (isset($dbc)) {
     mysqli_close($dbc);
 }
-?> -->
+?>
