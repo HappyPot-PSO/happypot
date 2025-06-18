@@ -1,6 +1,6 @@
 <?php
 
-require 'sanitizeInput.php'; 
+require 'sanitizeInput.php';
 require 'connect.php';
 session_start();
 
@@ -15,7 +15,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     $prepTime = isset($_POST["time"]) ? sanitizeInput($_POST["time"]) : '';
     $ingredients = isset($_POST["ingredients"]) ? sanitizeInput($_POST["ingredients"]) : '';
     $instructions = isset($_POST["instructions"]) ? sanitizeInput($_POST["instructions"]) : '';
-    $userId = $_SESSION['user_id']; 
+    $userId = $_SESSION['user_id'];
     $category = isset($_POST["category"]) ? sanitizeInput($_POST["category"]) : '';
 
     if (empty($name) || empty($prepTime) || empty($ingredients) || empty($instructions) || empty($category)) {
@@ -31,7 +31,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
 
     $max_title_length_db = 20;
 
-    $imagePath = null; 
+    $imagePath = null;
     $is_update_action = (isset($_POST['action']) && $_POST['action'] == 'update_recipe' && isset($_POST['recipe_id']) && !empty($_POST['recipe_id']));
 
     if ($is_update_action) {
@@ -49,13 +49,13 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
 
         if (in_array($extension, $allowed_extensions)) {
             if ($is_update_action && !empty($imagePath) && file_exists($imagePath) && $imagePath == sanitizeInput($_POST['existing_image'])) {
-                if (is_writable($imagePath)) { 
+                if (is_writable($imagePath)) {
                     unlink($imagePath);
                 } else {
                 }
             }
-            $newImageName = uniqid('recipe_', true) . "." . $extension; 
-            $newImagePath = "postimages/" . $newImageName; 
+            $newImageName = uniqid('recipe_', true) . "." . $extension;
+            $newImagePath = "postimages/" . $newImageName;
 
             if (move_uploaded_file($imageTempPath, $newImagePath)) {
                 $imagePath = $newImagePath;
@@ -73,13 +73,13 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
         }
     }
 
-    if ($imagePath === null) { 
-        if (!$is_update_action) { 
+    if ($imagePath === null) {
+        if (!$is_update_action) {
             $_SESSION['recipe_action_status'] = "Image is required for a new recipe.";
             $_SESSION['recipe_action_type'] = "error";
             header("Location: recipe.php");
             exit();
-        } else { 
+        } else {
             $_SESSION['recipe_action_status'] = "Image error during update. An image is required.";
             $_SESSION['recipe_action_type'] = "error";
             header("Location: edit_recipe.php?id=$recipe_id_to_update");
@@ -92,7 +92,6 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
         $category_suffix = " :: Category:" . $category;
         $available_length_for_name = $max_title_length_db - strlen($category_suffix);
         if ($available_length_for_name < 0) {
-
             $combined_name = substr($combined_name, 0, $max_title_length_db);
         } else {
             $truncated_name = substr($name, 0, $available_length_for_name);
@@ -112,11 +111,11 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
                 $sql_update = "UPDATE recipe SET title=?, img=?, time=?, ingredients=?, instructions=?, category=? WHERE idrec=? AND user_id=?";
                 $stmt_update = $dbc->prepare($sql_update);
                 $stmt_update->bind_param("ssisssii", $name, $imagePath, $prepTime, $ingredients, $instructions, $category, $recipe_id_to_update, $userId);
-                
+
                 if ($stmt_update->execute()) {
                     $_SESSION["recipe_action_status"] = "Recipe updated successfully!";
                     $_SESSION['recipe_action_type'] = "success";
-                    header("Location: display.php?id=$recipe_id_to_update&action=updated"); 
+                    header("Location: display.php?id=$recipe_id_to_update&action=updated");
                     exit();
                 } else {
                     $_SESSION["recipe_action_status"] = "Error updating recipe: " . $stmt_update->error;
@@ -132,17 +131,16 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
                 exit();
             }
             mysqli_stmt_close($stmt_check_update);
-
         } else {
             $sql_insert = "INSERT INTO recipe (title, img, time, ingredients, instructions, user_id, category) VALUES (?, ?, ?, ?, ?, ?, ?)";
             $stmt_insert = $dbc->prepare($sql_insert);
-            $stmt_insert->bind_param("ssisssi", $name, $imagePath, $prepTime, $ingredients, $instructions, $userId, $category); 
+            $stmt_insert->bind_param("ssisssi", $name, $imagePath, $prepTime, $ingredients, $instructions, $userId, $category);
 
             if ($stmt_insert->execute()) {
                 $new_recipe_id = $stmt_insert->insert_id;
-                $_SESSION['recipe_action_status'] = "Recipe posted successfully!"; 
+                $_SESSION['recipe_action_status'] = "Recipe posted successfully!";
                 $_SESSION['recipe_action_type'] = "success";
-                header("Location: display.php?id=$new_recipe_id&action=posted"); 
+                header("Location: display.php?id=$new_recipe_id&action=posted");
                 exit();
             } else {
                  $_SESSION['recipe_action_status'] = "Error posting recipe: " . $stmt_insert->error;
@@ -152,7 +150,6 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
             }
             $stmt_insert->close();
         }
-
     } catch (Exception $e) {
         $_SESSION['recipe_action_status'] = "Database Error: " . $e->getMessage();
         $_SESSION['recipe_action_type'] = "error";
@@ -164,13 +161,11 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
         }
         exit();
     }
-
 } else {
-    header("Location: index.php"); 
+    header("Location: index.php");
     exit();
 }
 
 if (isset($dbc)) {
     mysqli_close($dbc);
 }
-?>

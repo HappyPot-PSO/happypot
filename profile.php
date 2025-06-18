@@ -1,19 +1,19 @@
 <!-- <?php
-session_start(); 
+session_start();
 
 if (!isset($_SESSION['user_id'])) {
-    header("Location: index.php"); 
+    header("Location: index.php");
     exit();
 }
 
-require_once 'connect.php'; 
+require_once 'connect.php';
 
 $username_display = isset($_SESSION['username']) ? htmlspecialchars($_SESSION['username']) : 'User';
 $title = 'My Profile - Happy Pot';
 $user_id_session = $_SESSION['user_id'];
 $filterCategory = isset($_GET['category']) ? htmlspecialchars($_GET['category']) : 'all';
 
-$allowedCategories = ['all', 'food', 'drink']; 
+$allowedCategories = ['all', 'food', 'drink'];
 if (!in_array($filterCategory, $allowedCategories)) {
     $filterCategory = 'all';
 }
@@ -388,7 +388,7 @@ $result_user_recipes = mysqli_stmt_get_result($stmt_user_recipes);
             <h1 class="logo-text">Happy Pot</h1>
         </a>
         <div class="profile-header-nav">
-            <?php 
+            <?php
             echo '<div class="usermenu-greeting">Welcome, <span class="username">' . $username_display . '!</span></div>';
             echo '<button class="btn btnhov" type="button" onClick="location.href=\'recipe.php\'">Post a recipe</button>';
             echo '<button class="logoutbtn btnhovel" type="button" id="logoutConfirmBtn">Log-out</button>';
@@ -403,7 +403,7 @@ $result_user_recipes = mysqli_stmt_get_result($stmt_user_recipes);
             if (isset($_SESSION['recipe_action_status']) && isset($_SESSION['recipe_action_type'])) {
                 $status_message = htmlspecialchars($_SESSION['recipe_action_status']);
                 $status_type = htmlspecialchars($_SESSION['recipe_action_type']);
-                
+
                 echo "<script>
                         document.addEventListener('DOMContentLoaded', function() {
                             swal({
@@ -437,7 +437,7 @@ $result_user_recipes = mysqli_stmt_get_result($stmt_user_recipes);
                     <div class="profile-info-item">
                         <strong>Last Name:</strong> <?php echo htmlspecialchars($user_data['lname']); ?>
                     </div>
-                <?php else: ?>
+                <?php else : ?>
                     <p class="error-message" style="text-align:center; color:red;">User data not found.</p>
                 <?php endif; ?>
                 <div class="profile-edit-actions" style="text-align: center; margin-top: 20px;">
@@ -464,15 +464,16 @@ $result_user_recipes = mysqli_stmt_get_result($stmt_user_recipes);
                         echo '<table>';
                         $count = 0;
                         while ($recipe_row = mysqli_fetch_assoc($result_user_recipes)) {
-                            if ($count % 4 == 0) { 
-                                if ($count > 0) { echo '</tr>';
+                            if ($count % 4 == 0) {
+                                if ($count > 0) {
+                                    echo '</tr>';
                                 }
                                 echo '<tr>';
                             }
                             echo '<td>';
-                            echo '<div class="image-wrapper">'; 
+                            echo '<div class="image-wrapper">';
                             echo '<a href="display.php?id=' . $recipe_row['idrec'] . '"><img class="postimg" src="' . htmlspecialchars($recipe_row['img']) . '" alt="' . htmlspecialchars($recipe_row['title']) . '"></a>';
-                            echo '</div>'; 
+                            echo '</div>';
                             echo '<a href="display.php?id=' . $recipe_row['idrec'] . '" class="postitle">' . htmlspecialchars($recipe_row['title']) . '</a>';
                             echo '<span class="recipe-detail-profile"><i class="fa-regular fa-clock"></i> ' . htmlspecialchars($recipe_row['time']) . ' mins</span>';
                             echo '<div class="recipe-actions">';
@@ -484,17 +485,18 @@ $result_user_recipes = mysqli_stmt_get_result($stmt_user_recipes);
                         }
                         if ($count % 4 != 0) {
                             while ($count % 4 != 0) {
-                                echo '<td></td>'; 
+                                echo '<td></td>';
                                 $count++;
                             }
                         }
-                        echo '</tr>'; 
+                        echo '</tr>';
                         echo '</table>';
                     }
                 } else {
                     echo '<p class="norec">Error fetching your recipes: ' . (isset($dbc) ? htmlspecialchars(mysqli_error($dbc)) : 'Database connection error') . '</p>';
                 }
-                if(isset($stmt_user_recipes)) { mysqli_stmt_close($stmt_user_recipes);
+                if (isset($stmt_user_recipes)) {
+                    mysqli_stmt_close($stmt_user_recipes);
                 }
                 ?>
             </div>
@@ -572,6 +574,7 @@ $result_user_recipes = mysqli_stmt_get_result($stmt_user_recipes);
 </body>
 </html>
 <?php
-if(isset($dbc)) { mysqli_close($dbc);
-} 
+if (isset($dbc)) {
+    mysqli_close($dbc);
+}
 ?> -->

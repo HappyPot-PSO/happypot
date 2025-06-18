@@ -1,4 +1,5 @@
 <?php
+
 // Function to sanitize user input
 function sanitizeInput($input)
 {
@@ -7,4 +8,3 @@ function sanitizeInput($input)
     $sanitized = htmlspecialchars($sanitized);
     return $sanitized;
 }
-?>

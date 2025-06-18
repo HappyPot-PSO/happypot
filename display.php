@@ -1,12 +1,12 @@
 <?php
 session_start();
-require_once 'connect.php'; 
+require_once 'connect.php';
 
 $page_title_text = 'Recipe Details - Happy Pot';
 $recipe_details = null;
 $recipe_user_details = null;
 $comments_data = [];
-$recipeId_from_url = null; 
+$recipeId_from_url = null;
 $comment_submission_error = '';
 
 
@@ -15,13 +15,13 @@ if (isset($_GET['id']) && filter_var($_GET['id'], FILTER_VALIDATE_INT)) {
 }
 
 if (isset($_POST['submit_comment']) && isset($_SESSION['user_id']) && $recipeId_from_url) {
-    $recipeId_safe_for_comment_action = $recipeId_from_url; 
-    $comment_text = $_POST['comment']; 
+    $recipeId_safe_for_comment_action = $recipeId_from_url;
+    $comment_text = $_POST['comment'];
     $session_user_id = $_SESSION['user_id'];
 
     if (!empty(trim($comment_text))) {
         $stmt_insert_comment = $dbc->prepare("INSERT INTO comment (comm, recipe_idrec, user_id) VALUES (?, ?, ?)");
-        
+
         if ($stmt_insert_comment === false) {
             $comment_submission_error = "Database prepare error for comment insertion: " . $dbc->error;
         } else {
@@ -49,7 +49,7 @@ if (isset($_GET['action']) && isset($_SESSION['recipe_action_status']) && isset(
     if ($action_performed == 'updated' || $action_performed == 'posted' || $action_performed == 'comment_posted') {
         $status_message = htmlspecialchars($_SESSION['recipe_action_status']);
         $status_type = htmlspecialchars($_SESSION['recipe_action_type']);
-        
+
         $id_for_url_cleanup = isset($recipeId_from_url) ? $recipeId_from_url : '';
 
         $alert_script = "<script>
@@ -69,7 +69,7 @@ if (isset($_GET['action']) && isset($_SESSION['recipe_action_status']) && isset(
                     }
                 });
               </script>";
-        
+
         unset($_SESSION['recipe_action_status']);
         unset($_SESSION['recipe_action_type']);
     }
@@ -111,14 +111,14 @@ if ($recipeId_from_url) {
                 $stmt_comments->bind_param("i", $recipeId_from_url);
                 $stmt_comments->execute();
                 $result_comments = $stmt_comments->get_result();
-                
+
                 if ($result_comments) {
                     while ($comment_row = $result_comments->fetch_assoc()) {
                         $commentUserId = $comment_row['user_id'];
                         $commentUserQuery = "SELECT fname, lname FROM user WHERE id = ?";
                         $stmt_comment_user = $dbc->prepare($commentUserQuery);
                         if ($stmt_comment_user === false) {
-                            $commentAuthorDetails = ['fname' => 'User', 'lname' => '(DB Error)']; 
+                            $commentAuthorDetails = ['fname' => 'User', 'lname' => '(DB Error)'];
                         } else {
                             $stmt_comment_user->bind_param("i", $commentUserId);
                             $stmt_comment_user->execute();
@@ -142,7 +142,7 @@ if ($recipeId_from_url) {
         $stmt_recipe->close();
     }
 } else {
-    if (empty($alert_script)) { 
+    if (empty($alert_script)) {
         $page_title_text = 'Error - Recipe ID Not Provided - Happy Pot';
     }
 }
@@ -296,7 +296,7 @@ if ($recipeId_from_url) {
                 <form method="POST" action="logout.php" style="display:inline;">
                     <button class="logoutbtn btnhovel" type="submit" name="logout">Log-out</button>
                 </form>
-            <?php else: ?>
+            <?php else : ?>
                 <a href="login_page.php" class="btn btnhov">Login</a>
                 <a href="register_page.php" class="btn btnhov">Sign Up</a>
             <?php endif; ?>
@@ -318,8 +318,8 @@ if ($recipeId_from_url) {
                         <span class="author-name">
                             By: <?php echo htmlspecialchars($recipe_user_details['fname']) . ' ' . htmlspecialchars($recipe_user_details['lname']); ?>
                         </span>
-                        <?php 
-                        if (!empty($recipe_category_display)) : 
+                        <?php
+                        if (!empty($recipe_category_display)) :
                             ?>
                             <span class="recipe-category">
                                 Category: <?php echo htmlspecialchars($recipe_category_display); ?>
@@ -340,13 +340,13 @@ if ($recipeId_from_url) {
                     <div id="comments-section" class="recipe-section comments-section">
                         <h3>Comments:</h3>
                         <?php if (!empty($comments_data)) : ?>
-                            <?php foreach ($comments_data as $comment): ?>
+                            <?php foreach ($comments_data as $comment) : ?>
                                 <div class="comment-item">
                                     <p class="comment-author"><?php echo htmlspecialchars($comment['author_fname']) . ' ' . htmlspecialchars($comment['author_lname']); ?> says:</p>
                                     <p class="comment-text"><?php echo nl2br(htmlspecialchars($comment['comment_text'])); ?></p>
                                 </div>
                             <?php endforeach; ?>
-                        <?php else: ?>
+                        <?php else : ?>
                             <p class="no-comments-text">No comments yet. Be the first to comment.</p>
                         <?php endif; ?>
                     </div>
@@ -365,7 +365,7 @@ if ($recipeId_from_url) {
                                 <input type="submit" name="submit_comment" class="comment-submit-btn" value="Submit Comment">
                             </form>
                         </div>
-                    <?php else: ?>
+                    <?php else : ?>
                         <div class="recipe-section">
                             <p>Please <a href="login_page.php?redirect=display.php?id=<?php echo htmlspecialchars($recipeId_from_url); ?>">login</a> to add a comment.</p>
                         </div>
@@ -381,7 +381,7 @@ if ($recipeId_from_url) {
                    <div class="back-button-container">
                     <a href="dashboard.php" class="back-button">Go Back to Recipes</a>
                 </div>
-            <?php else: ?>
+            <?php else : ?>
                 <p class="error-page-message">Error: Recipe ID not provided.</p>
                    <div class="back-button-container">
                     <a href="dashboard.php" class="back-button">Go Back to Recipes</a>
@@ -414,6 +414,7 @@ if ($recipeId_from_url) {
 </body>
 </html>
 <?php
-if(isset($dbc)) { mysqli_close($dbc);
+if (isset($dbc)) {
+    mysqli_close($dbc);
 }
 ?>

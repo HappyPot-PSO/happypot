@@ -1,12 +1,12 @@
 <?php
-session_start(); 
+session_start();
 $title = 'Happy Pot Dashboard';
 
-global $dbc; 
+global $dbc;
 if (!isset($dbc)) {
     if (file_exists('connect.php')) {
         include_once 'connect.php';
-    } else if (file_exists('../connect.php')) { 
+    } elseif (file_exists('../connect.php')) {
         include_once '../connect.php';
     } else {
         die("Error: Database connection file not found.");
@@ -15,9 +15,9 @@ if (!isset($dbc)) {
 
 $filterCategory = isset($_GET['category']) ? htmlspecialchars($_GET['category']) : 'all';
 
-$allowedCategories = ['all', 'food', 'drink']; 
+$allowedCategories = ['all', 'food', 'drink'];
 if (!in_array($filterCategory, $allowedCategories)) {
-    $filterCategory = 'all'; 
+    $filterCategory = 'all';
 }
 
 ?>
@@ -325,7 +325,7 @@ if (!in_array($filterCategory, $allowedCategories)) {
                 echo '<div class="usermenu-greeting">Welcome, <span class="username">' . htmlspecialchars($_SESSION['username']) . '!</span></div>';
             }
             echo '<button class="btn btnhov" type="button" onClick="location.href=\'profile.php\'">Profile</button>';
-            echo '<button class="btn btnhov post-recipe-btn" type="button" onClick="location.href=\'recipe.php\'">Post a recipe</button>'; 
+            echo '<button class="btn btnhov post-recipe-btn" type="button" onClick="location.href=\'recipe.php\'">Post a recipe</button>';
             echo '<button class="logoutbtn btnhovel" type="button" id="logoutConfirmBtn">Log-out</button>';
             ?>
         </div>
@@ -358,12 +358,12 @@ if (!in_array($filterCategory, $allowedCategories)) {
                     $query = "SELECT r.idrec, r.title, r.img, r.time, r.category, u.fname, u.lname 
                               FROM recipe r 
                               JOIN user u ON r.user_id = u.id";
-                    
+
                     if ($filterCategory !== 'all') {
                         $query .= " WHERE r.category = ?";
                     }
-                    
-                    $query .= " ORDER BY r.idrec DESC"; 
+
+                    $query .= " ORDER BY r.idrec DESC";
 
                     $stmt = $dbc->prepare($query);
 
@@ -373,7 +373,7 @@ if (!in_array($filterCategory, $allowedCategories)) {
                         if ($filterCategory !== 'all') {
                             $stmt->bind_param("s", $filterCategory);
                         }
-                        
+
                         $stmt->execute();
                         $result = $stmt->get_result();
 
@@ -384,32 +384,33 @@ if (!in_array($filterCategory, $allowedCategories)) {
                                 echo '<table>';
                                 $count = 0;
                                 while ($row = $result->fetch_assoc()) {
-                                    if ($count % 4 == 0) { 
-                                        if ($count > 0) { echo '</tr>';
-                                        } 
-                                        echo '<tr>'; 
+                                    if ($count % 4 == 0) {
+                                        if ($count > 0) {
+                                            echo '</tr>';
+                                        }
+                                        echo '<tr>';
                                     }
                                     echo '<td>';
-                                    echo '<div class="image-wrapper">'; 
+                                    echo '<div class="image-wrapper">';
                                     echo '<a href="display.php?id=' . $row['idrec'] . '"><img class="postimg" src="' . htmlspecialchars($row['img']) . '" alt="' . htmlspecialchars($row['title']) . '"></a>';
-                                    echo '</div>'; 
-                                    echo '<a href="display.php?id=' . $row['idrec'] . '" class="postitle">' . htmlspecialchars($row['title']) . '</a>'; 
-                                    echo '<span class="recipe-detail"><i class="fa-regular fa-clock"></i> ' . htmlspecialchars($row['time']) . ' mins</span>'; 
-                                    echo '<span class="recipe-detail">By ' . htmlspecialchars($row['fname']) . ' ' . htmlspecialchars($row['lname']) . '</span>'; 
+                                    echo '</div>';
+                                    echo '<a href="display.php?id=' . $row['idrec'] . '" class="postitle">' . htmlspecialchars($row['title']) . '</a>';
+                                    echo '<span class="recipe-detail"><i class="fa-regular fa-clock"></i> ' . htmlspecialchars($row['time']) . ' mins</span>';
+                                    echo '<span class="recipe-detail">By ' . htmlspecialchars($row['fname']) . ' ' . htmlspecialchars($row['lname']) . '</span>';
                                     echo '</td>';
 
                                     $count++;
                                 }
                                 if ($count % 4 != 0) {
                                     while ($count % 4 != 0) {
-                                        echo '<td></td>'; 
+                                        echo '<td></td>';
                                         $count++;
                                     }
                                 }
-                                echo '</tr>'; 
+                                echo '</tr>';
                                 echo '</table>';
                             }
-                            $result->free(); 
+                            $result->free();
                         } else {
                             echo '<p class="norec">Error fetching recipes: ' . htmlspecialchars($dbc->error) . '</p>';
                         }
@@ -458,6 +459,7 @@ if (!in_array($filterCategory, $allowedCategories)) {
 </body>
 </html>
 <?php
-if(isset($dbc)) { mysqli_close($dbc);
-} 
+if (isset($dbc)) {
+    mysqli_close($dbc);
+}
 ?>

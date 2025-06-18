@@ -13,21 +13,21 @@ class TestCase extends BaseTestCase
     protected function setUp(): void
     {
         parent::setUp();
-        
+
         // Create mock for mysqli
         $this->dbc = $this->getMockBuilder(\mysqli::class)
             ->disableOriginalConstructor()
             ->onlyMethods(['prepare', 'query', 'close'])
             ->addMethods(['connect_error', 'getInsertId'])
             ->getMock();
-        
+
         // Set up common mock expectations
         $this->dbc->method('prepare')
             ->willReturn($this->createMock(\mysqli_stmt::class));
-            
+
         $this->dbc->method('query')
             ->willReturn($this->createMock(\mysqli_result::class));
-            
+
         $this->dbc->method('connect_error')
             ->willReturn(null);
 
@@ -58,7 +58,7 @@ class TestCase extends BaseTestCase
             ->disableOriginalConstructor()
             ->onlyMethods(['fetch_assoc'])
             ->getMock();
-            
+
         $result->method('fetch_assoc')
             ->willReturn(
                 [
@@ -73,7 +73,7 @@ class TestCase extends BaseTestCase
             ->disableOriginalConstructor()
             ->onlyMethods(['bind_param', 'execute', 'get_result'])
             ->getMock();
-            
+
         $stmt->method('bind_param')
             ->willReturn(true);
         $stmt->method('execute')
@@ -94,7 +94,7 @@ class TestCase extends BaseTestCase
             ->disableOriginalConstructor()
             ->onlyMethods(['fetch_assoc'])
             ->getMock();
-            
+
         $result->method('fetch_assoc')
             ->willReturn(
                 [
@@ -111,7 +111,7 @@ class TestCase extends BaseTestCase
             ->disableOriginalConstructor()
             ->onlyMethods(['bind_param', 'execute', 'get_result'])
             ->getMock();
-            
+
         $stmt->method('bind_param')
             ->willReturn(true);
         $stmt->method('execute')
@@ -129,4 +129,4 @@ class TestCase extends BaseTestCase
     {
         // No cleanup needed for mocks
     }
-} 
+}

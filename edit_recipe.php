@@ -19,7 +19,7 @@ if (isset($_GET['id']) && filter_var($_GET['id'], FILTER_VALIDATE_INT)) {
     // MODIFICATION 1: Add 'category' to the SELECT query
     $query_fetch_recipe = "SELECT idrec, title, img, time, ingredients, instructions, category FROM recipe WHERE idrec = ? AND user_id = ?";
     $stmt_fetch = mysqli_prepare($dbc, $query_fetch_recipe);
-    
+
     if ($stmt_fetch === false) {
         $error_message = "Database prepare error: " . $dbc->error;
     } else {
@@ -45,7 +45,7 @@ $alert_script = '';
 if (isset($_SESSION['recipe_action_status']) && isset($_SESSION['recipe_action_type'])) {
     $status_message = htmlspecialchars($_SESSION['recipe_action_status']);
     $status_type = htmlspecialchars($_SESSION['recipe_action_type']);
-    
+
     $alert_script = "<script>
         document.addEventListener('DOMContentLoaded', function() {
             if(typeof swal === 'function') {
@@ -295,7 +295,7 @@ if (isset($_SESSION['recipe_action_status']) && isset($_SESSION['recipe_action_t
                         <button id="updateRecipeButton" class="postbtn btnhov" type="button" name="update">Update Recipe</button>
                     </div>
                 </form>
-            <?php else: ?>
+            <?php else : ?>
                    <p class="error-message-page">Could not load recipe data for editing.</p>
                      <div style="text-align:center; margin-top:20px;">
                     <a href="profile.php" style="padding:10px 20px; background-color:#ddd; color:#333; text-decoration:none; border-radius:5px;">Go to Profile</a>
@@ -445,6 +445,7 @@ if (isset($_SESSION['recipe_action_status']) && isset($_SESSION['recipe_action_t
 </body>
 </html>
 <?php
-if(isset($dbc)) { mysqli_close($dbc);
+if (isset($dbc)) {
+    mysqli_close($dbc);
 }
 ?>

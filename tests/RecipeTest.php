@@ -19,7 +19,7 @@ class RecipeTest extends TestCase
             ->disableOriginalConstructor()
             ->onlyMethods(['fetch_assoc'])
             ->getMock();
-            
+
         $result->method('fetch_assoc')
             ->willReturn(
                 [
@@ -36,7 +36,7 @@ class RecipeTest extends TestCase
             ->disableOriginalConstructor()
             ->onlyMethods(['bind_param', 'execute', 'get_result'])
             ->getMock();
-            
+
         $stmt->method('bind_param')
             ->willReturn(true);
         $stmt->method('execute')
@@ -65,7 +65,7 @@ class RecipeTest extends TestCase
             ->disableOriginalConstructor()
             ->onlyMethods(['fetch_assoc'])
             ->getMock();
-            
+
         $result->method('fetch_assoc')
             ->willReturn(
                 [
@@ -82,7 +82,7 @@ class RecipeTest extends TestCase
             ->disableOriginalConstructor()
             ->onlyMethods(['bind_param', 'execute', 'get_result'])
             ->getMock();
-            
+
         $stmt->method('bind_param')
             ->willReturn(true);
         $stmt->method('execute')
@@ -113,7 +113,7 @@ class RecipeTest extends TestCase
             ->disableOriginalConstructor()
             ->addMethods(['num_rows'])
             ->getMock();
-            
+
         $result->method('num_rows')
             ->willReturn(0);
 
@@ -122,7 +122,7 @@ class RecipeTest extends TestCase
             ->disableOriginalConstructor()
             ->onlyMethods(['bind_param', 'execute', 'get_result'])
             ->getMock();
-            
+
         $stmt->method('bind_param')
             ->willReturn(true);
         $stmt->method('execute')
@@ -150,7 +150,7 @@ class RecipeTest extends TestCase
             ->disableOriginalConstructor()
             ->onlyMethods(['fetch_all'])
             ->getMock();
-            
+
         $result->method('fetch_all')
             ->with(MYSQLI_ASSOC)
             ->willReturn(
@@ -184,7 +184,7 @@ class RecipeTest extends TestCase
             ->disableOriginalConstructor()
             ->onlyMethods(['bind_param', 'execute', 'get_result'])
             ->getMock();
-            
+
         $stmt->method('bind_param')
             ->willReturn(true);
         $stmt->method('execute')
@@ -214,7 +214,7 @@ class RecipeTest extends TestCase
             ->disableOriginalConstructor()
             ->onlyMethods(['fetch_all'])
             ->getMock();
-            
+
         $result->method('fetch_all')
             ->with(MYSQLI_ASSOC)
             ->willReturn(
@@ -234,7 +234,7 @@ class RecipeTest extends TestCase
             ->disableOriginalConstructor()
             ->onlyMethods(['bind_param', 'execute', 'get_result'])
             ->getMock();
-            
+
         $stmt->method('bind_param')
             ->willReturn(true);
         $stmt->method('execute')
@@ -251,4 +251,4 @@ class RecipeTest extends TestCase
         $this->assertCount(1, $recipes);
         $this->assertEquals('Chicken Curry', $recipes[0]['title']);
     }
-} 
+}

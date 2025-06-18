@@ -1,0 +1,49 @@
+
+# Composer dependencies
+/vendor/
+
+# Node dependencies (if any)
+node_modules/
+
+# OS generated files
+.DS_Store
+Thumbs.db
+
+# Log files
+*.log
+
+# Environment files
+.env
+.env.*
+
+# PHPStorm and VSCode project files
+.idea/
+.vscode/
+
+# PHPUnit and test output
+phpunit.result.cache
+coverage/
+tests/_output/
+
+# Uploaded images and user content
+/postimages/
+
+# Cache and session files
+cache/
+*.cache
+*.session
+
+# Docker artifacts
+*.pid
+
+# Ignore compiled files
+*.out
+*.o
+
+# Ignore backup files
+*~
+*.bak
+
+# Ignore any other sensitive or temporary files
+*.swp
+*.swo

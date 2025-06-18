@@ -1,6 +1,6 @@
 <?php
-session_start(); 
-$title = 'Login - Happy Pot'; 
+session_start();
+$title = 'Login - Happy Pot';
 
 // Move all SweetAlert display logic from index.php to here
 if (isset($_SESSION["login_error"]) && $_SESSION["login_error"]) {

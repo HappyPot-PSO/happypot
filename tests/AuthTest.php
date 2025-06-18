@@ -15,7 +15,7 @@ class AuthTest extends \Tests\TestCase
     {
         // Create a test user
         $userId = $this->createTestUser();
-        
+
         // Verify the user was created
         $this->assertIsInt($userId);
         $this->assertGreaterThan(0, $userId);
@@ -25,13 +25,13 @@ class AuthTest extends \Tests\TestCase
     {
         // Create a test user
         $userId = $this->createTestUser();
-        
+
         // Mock the result set for user verification
         $result = $this->getMockBuilder(\mysqli_result::class)
             ->disableOriginalConstructor()
             ->onlyMethods(['fetch_assoc'])
             ->getMock();
-            
+
         $result->method('fetch_assoc')
             ->willReturn(
                 [
@@ -46,7 +46,7 @@ class AuthTest extends \Tests\TestCase
             ->disableOriginalConstructor()
             ->onlyMethods(['bind_param', 'execute', 'get_result'])
             ->getMock();
-            
+
         $stmt->method('bind_param')
             ->willReturn(true);
         $stmt->method('execute')
@@ -65,13 +65,13 @@ class AuthTest extends \Tests\TestCase
     {
         // Create a test user
         $userId = $this->createTestUser();
-        
+
         // Mock the result set for user verification
         $result = $this->getMockBuilder(\mysqli_result::class)
             ->disableOriginalConstructor()
             ->onlyMethods(['fetch_assoc'])
             ->getMock();
-            
+
         $result->method('fetch_assoc')
             ->willReturn(
                 [
@@ -86,7 +86,7 @@ class AuthTest extends \Tests\TestCase
             ->disableOriginalConstructor()
             ->onlyMethods(['bind_param', 'execute', 'get_result'])
             ->getMock();
-            
+
         $stmt->method('bind_param')
             ->willReturn(true);
         $stmt->method('execute')
@@ -100,4 +100,4 @@ class AuthTest extends \Tests\TestCase
         // Verify incorrect password doesn't work
         $this->assertFalse(password_verify('wrongpass', $result->fetch_assoc()['password']));
     }
-} 
+}

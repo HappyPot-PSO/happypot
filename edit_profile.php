@@ -75,13 +75,9 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             $error_message = "To change your password, you must enter your current password.";
         } elseif (!password_verify($current_password, $stored_hashed_password)) {
             $error_message = "Current password is incorrect.";
-        }
-        // 2. Validate New Password length
-        elseif (strlen($new_password) < 8) {
+        } elseif (strlen($new_password) < 8) {
             $error_message = "New password must be at least 8 characters long.";
-        }
-        // 3. Validate New Password vs Confirm New Password
-        elseif ($new_password !== $confirm_new_password) {
+        } elseif ($new_password !== $confirm_new_password) {
             $error_message = "New password and confirm new password do not match.";
         } else {
             $update_password = true; // Mark to update password
@@ -145,7 +141,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                 $user_data = mysqli_fetch_assoc($result_user_details_after_update); // Update $user_data
                 $stored_hashed_password = $user_data['password']; // Update stored hashed password
                 mysqli_stmt_close($stmt_user_details_after_update);
-
             } else {
                 $error_message = "Error updating profile: " . mysqli_error($dbc);
             }
@@ -192,7 +187,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         .header-nav .usermenu-greeting {
             font-weight:bold;
             color:#555;
-            margin-right: 15px; 
+            margin-right: 15px;
         }
         .header-nav .username {color:#4dc9f7;}
         .header-nav .btn, .header-nav .logoutbtn {
@@ -203,7 +198,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             margin-left: 15px;
         }
         .header-nav button[onClick*='recipe.php'] {
-            margin-right: 10px; 
+            margin-right: 10px;
         }
         .header-nav .btn.btnhov:hover, .header-nav .logoutbtn.btnhovel:hover {
             background-color: #d0d0d0;
@@ -312,7 +307,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         </a>
         <div class="header-nav">
             <?php
-            echo '<div class="usermenu-greeting">Welcome, <span class="username">' . htmlspecialchars($_SESSION['username']) . '!</span></div>';
+            echo '<div class="usermenu-greeting">Welcome, <span class="username">' .
+                htmlspecialchars($_SESSION['username']) . '!</span></div>';
             echo '<button class="btn btnhov" type="button" onClick="location.href=\'recipe.php\'">Post a recipe</button>';
             echo '<button class="logoutbtn btnhovel" type="button" id="logoutConfirmBtn">Log-out</button>';
             ?>
@@ -330,7 +326,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             <form action="edit_profile.php" method="POST">
                 <div class="form-group">
                     <label for="email">Email:</label>
-                    <input type="email" id="email" name="email" value="<?php echo htmlspecialchars($user_data['email']); ?>" required>
+                    <input type="email" id="email" name="email" 
+                        value="<?php echo htmlspecialchars($user_data['email']); ?>" required>
                 </div>
                 <div class="form-group">
                     <label for="fname">First Name:</label>
@@ -413,6 +410,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 </html>
 
 <?php
-if(isset($dbc)) { mysqli_close($dbc);
+if (isset($dbc)) {
+    mysqli_close($dbc);
 }
 ?>

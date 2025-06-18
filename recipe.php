@@ -6,7 +6,7 @@ if (!isset($_SESSION['user_id']) || !isset($_SESSION['username'])) {
     exit();
 }
 
-$title = 'Post a New Recipe - Happy Pot'; 
+$title = 'Post a New Recipe - Happy Pot';
 $username_display = isset($_SESSION['username']) ? htmlspecialchars($_SESSION['username']) : 'User';
 
 ?>
