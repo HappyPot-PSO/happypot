@@ -55,7 +55,7 @@ jobs:
       run: |
         ./vendor/bin/phpmd . text cleancode,codesize,design,naming --exclude vendor/
       
-    - ⁠name: Build Docker image
+    - name: Build Docker image
       run: |
         docker build -t asia-southeast2-docker.pkg.dev/${{ secrets.PROJECT_ID }}/${{ env.SERVICE_NAME }}/${{ env.SERVICE_NAME }}:ci .
         docker image ls
